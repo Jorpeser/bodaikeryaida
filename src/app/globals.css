@@ -1,0 +1,257 @@
+/* ============================================================
+   Aida & Iker — Wedding Design System (ported verbatim from the
+   design handoff tokens: fonts, colors, typography, spacing, base).
+   ============================================================ */
+
+/* --- Webfonts ---------------------------------------------------------- */
+@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+/* ============================================================
+   COLORS — "Aida & Iker" editorial wedding palette
+   Warm ivory paper · espresso ink · terracotta accent.
+   ============================================================ */
+:root {
+  /* --- Base neutrals (the paper) --- */
+  --paper:        #F0ECE3;
+  --paper-2:      #E8E3D7;
+  --paper-3:      #DED8C9;
+
+  /* --- Ink (warm near-black) --- */
+  --ink:          #23201A;
+  --ink-2:        #46413A;
+  --ink-muted:    #8C857A;
+  --ink-faint:    #B6AF9F;
+
+  /* --- Accent: terracotta clay --- */
+  --clay:         #B0563A;
+  --clay-deep:    #8C3F28;
+  --clay-soft:    #D8A38C;
+
+  /* --- Lines & strokes --- */
+  --line:         rgba(35, 32, 26, 0.16);
+  --line-strong:  rgba(35, 32, 26, 0.34);
+  --line-faint:   rgba(35, 32, 26, 0.08);
+
+  /* --- Semantic aliases --- */
+  --bg:               var(--paper);
+  --bg-alt:           var(--paper-2);
+  --surface-card:     transparent;
+  --surface-photo:    var(--paper-2);
+
+  --text-display:     var(--ink);
+  --text-body:        var(--ink-2);
+  --text-heading:     var(--ink);
+  --text-label:       var(--ink-muted);
+  --text-disabled:    var(--ink-faint);
+
+  --accent:           var(--clay);
+  --accent-hover:     var(--clay-deep);
+  --accent-tint:      var(--clay-soft);
+
+  --link:             var(--ink);
+  --link-accent:      var(--clay);
+
+  --rule:             var(--line);
+  --rule-strong:      var(--line-strong);
+  --rule-faint:       var(--line-faint);
+
+  --focus-ring:       var(--clay);
+
+  --selection-bg:     var(--clay-soft);
+  --selection-fg:     var(--ink);
+
+  /* ============================================================
+     TYPOGRAPHY
+     ============================================================ */
+  --font-display: 'Hanken Grotesk', 'Arial Narrow', sans-serif;
+  --font-sans:    'Hanken Grotesk', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, 'SFMono-Regular', monospace;
+
+  --w-regular:  400;
+  --w-medium:   500;
+  --w-semibold: 600;
+  --w-bold:     700;
+  --w-extra:    800;
+  --w-black:    900;
+
+  --fs-mega:    clamp(4.5rem, 13vw, 11rem);
+  --fs-display: clamp(3rem, 8vw, 7rem);
+  --fs-h1:      clamp(2.25rem, 5vw, 4rem);
+  --fs-h2:      clamp(1.75rem, 3.4vw, 2.75rem);
+  --fs-h3:      clamp(1.35rem, 2.2vw, 1.75rem);
+
+  --fs-numeral: clamp(2.5rem, 6vw, 5rem);
+
+  --fs-lead:    1.125rem;
+  --fs-body:    1rem;
+  --fs-small:   0.8125rem;
+  --fs-label:   0.75rem;
+  --fs-micro:   0.6875rem;
+
+  --lh-display: 0.92;
+  --lh-tight:   1.05;
+  --lh-snug:    1.25;
+  --lh-body:    1.6;
+  --lh-mono:    1.7;
+
+  --ls-display: -0.02em;
+  --ls-tight:   -0.01em;
+  --ls-normal:  0;
+  --ls-label:   0.22em;
+  --ls-meta:    0.12em;
+
+  --type-hero:       var(--w-extra) var(--fs-mega)/var(--lh-display) var(--font-display);
+  --type-display:    var(--w-extra) var(--fs-display)/var(--lh-display) var(--font-display);
+  --type-h1:         var(--w-bold) var(--fs-h1)/var(--lh-tight) var(--font-display);
+  --type-h2:         var(--w-bold) var(--fs-h2)/var(--lh-tight) var(--font-display);
+  --type-h3:         var(--w-bold) var(--fs-h3)/var(--lh-snug) var(--font-display);
+  --type-numeral:    var(--w-bold) var(--fs-numeral)/1 var(--font-display);
+  --type-label:      var(--w-medium) var(--fs-label)/1.4 var(--font-mono);
+  --type-meta:       var(--w-regular) var(--fs-small)/var(--lh-mono) var(--font-mono);
+  --type-lead:       var(--w-regular) var(--fs-lead)/var(--lh-mono) var(--font-mono);
+  --type-body:       var(--w-regular) var(--fs-body)/var(--lh-body) var(--font-sans);
+
+  /* ============================================================
+     SPACING, LAYOUT, RADII, MOTION
+     ============================================================ */
+  --s-0:   0;
+  --s-1:   4px;
+  --s-2:   8px;
+  --s-3:   12px;
+  --s-4:   16px;
+  --s-5:   24px;
+  --s-6:   32px;
+  --s-7:   48px;
+  --s-8:   64px;
+  --s-9:   96px;
+  --s-10:  128px;
+  --s-11:  176px;
+  --s-12:  240px;
+
+  --page-max:   1400px;
+  --page-pad:   clamp(20px, 5vw, 80px);
+  --section-y:  clamp(80px, 14vw, 200px);
+  --col-gap:    clamp(16px, 3vw, 48px);
+
+  --r-none:  0;
+  --r-xs:    2px;
+  --r-sm:    4px;
+  --r-pill:  999px;
+
+  --bw-hair:   1px;
+  --bw-rule:   1.5px;
+  --bw-bold:   2px;
+
+  --shadow-none:  none;
+  --shadow-float: 0 2px 18px rgba(35, 32, 26, 0.10);
+
+  --ease:        cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast:    140ms;
+  --dur:         260ms;
+  --dur-slow:    520ms;
+
+  --gutter:        var(--page-pad);
+  --stack-tight:   var(--s-3);
+  --stack:         var(--s-5);
+  --stack-loose:   var(--s-7);
+  --radius-control: var(--r-sm);
+}
+
+::selection { background: var(--selection-bg); color: var(--selection-fg); }
+
+/* ============================================================
+   BASE — light reset + element defaults for the paper system.
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; background: var(--paper); }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text-body);
+  font: var(--type-body);
+  letter-spacing: var(--ls-normal);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  font-family: var(--font-display);
+  color: var(--text-heading);
+  font-weight: var(--w-extra);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-display);
+  line-height: var(--lh-display);
+}
+
+p { margin: 0; }
+
+a {
+  color: var(--link);
+  text-decoration: none;
+}
+
+img { display: block; max-width: 100%; }
+
+button { font-family: inherit; }
+
+:focus-visible {
+  outline: var(--bw-bold) solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+hr {
+  border: 0;
+  border-top: var(--bw-hair) solid var(--rule);
+  margin: 0;
+}
+
+/* --- Button hover treatments (from the DS Button component) --------------- */
+.ds-btn--link:hover { color: var(--clay); border-color: var(--clay); }
+.ds-btn--link:active { color: var(--clay-deep); }
+.ds-btn--outline:hover { border-color: var(--ink); background: rgba(35, 32, 26, 0.04); }
+.ds-btn--outline:active { background: rgba(35, 32, 26, 0.08); }
+.ds-btn--solid:hover { background: var(--clay); }
+.ds-btn--solid:active { background: var(--clay-deep); }
+
+/* --- RSVP submit button hover (ink -> clay) ------------------------------- */
+.rsvp-submit { background: var(--ink); }
+.rsvp-submit:hover { background: var(--clay); }
+
+/* --- InfoCard illustration grid — mobile-first responsive ----------------- */
+.info-card-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-6);
+  align-items: start;
+}
+
+.info-card-grid--illustration {
+  /* mobile: illustration spans full width above content */
+}
+
+.info-card-illustration {
+  width: 100%;
+  max-width: 280px;
+}
+
+@media (min-width: 640px) {
+  .info-card-grid--illustration {
+    grid-template-columns: minmax(140px, 220px) 1fr;
+    gap: var(--s-7);
+  }
+  .info-card-illustration {
+    max-width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
