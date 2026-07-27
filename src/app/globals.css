@@ -314,6 +314,42 @@ hr {
   animation: rsvp-bounce 1.6s var(--ease) infinite;
 }
 
+/* --- Photo carousel — 3 visibles, scroll continuo ------------------------- */
+.photo-carousel {
+  overflow: hidden;
+  padding: 0 2px;
+}
+
+.photo-carousel-track {
+  display: flex;
+  gap: 2px;
+  width: max-content;
+  animation: photo-carousel-scroll 40s linear infinite;
+}
+
+.photo-carousel-slide {
+  flex: none;
+  width: calc((100vw - 8px) / 3);
+}
+
+@keyframes photo-carousel-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(-50% - 1px)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .photo-carousel-track {
+    animation: none;
+    width: 100%;
+  }
+  .photo-carousel-slide {
+    width: calc((100% - 4px) / 3);
+  }
+  .photo-carousel-track .photo-carousel-slide:nth-child(n+4) {
+    display: none;
+  }
+}
+
 /* --- InfoCard illustration grid — mobile-first responsive ----------------- */
 .info-card-grid {
   display: grid;

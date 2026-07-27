@@ -29,10 +29,7 @@ export function Header({ t, lang, setLang }: { t: Translation; lang: Lang; setLa
       <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
         <span style={{ font: 'var(--type-label)', letterSpacing: 'var(--ls-label)', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>{t.place}</span>
       </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--s-5)' }}>
-        <span style={{ font: 'var(--type-label)', letterSpacing: 'var(--ls-label)', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>{t.invite}</span>
-        <LangToggle value={lang === 'es' ? 'ES' : 'EN'} onChange={(v) => setLang(v === 'ES' ? 'es' : 'en')} />
-      </div>
+      <LangToggle value={lang === 'es' ? 'ES' : 'EN'} onChange={(v) => setLang(v === 'ES' ? 'es' : 'en')} />
     </header>
   );
 }
@@ -76,11 +73,27 @@ export function Names({ t, parts }: { t: Translation; parts: number[] }) {
   );
 }
 
-/* ---------------- Photo strip ---------------- */
-export function PhotoStrip({ ratios = ['3 / 4', '3 / 4', '3 / 4', '3 / 4', '3 / 4'] }: { ratios?: string[] }) {
+/* ---------------- Photo carousel ---------------- */
+const CAROUSEL_PHOTOS = [
+  '/photos/01.jpg',
+  '/photos/02.jpg',
+  '/photos/03.jpg',
+  '/photos/04.jpg',
+  '/photos/05.jpg',
+];
+
+export function PhotoStrip() {
+  // Duplicate track for seamless loop
+  const track = [...CAROUSEL_PHOTOS, ...CAROUSEL_PHOTOS];
   return (
-    <section style={{ display: 'grid', gridTemplateColumns: `repeat(${ratios.length}, 1fr)`, gap: '2px', padding: '0 2px' }}>
-      {ratios.map((r, i) => <PhotoFrame key={i} ratio={r} />)}
+    <section className="photo-carousel" aria-roledescription="carousel" aria-label="Fotos">
+      <div className="photo-carousel-track">
+        {track.map((src, idx) => (
+          <div key={idx} className="photo-carousel-slide">
+            <PhotoFrame src={src} alt="" ratio="3 / 4" bw={false} />
+          </div>
+        ))}
+      </div>
     </section>
   );
 }
@@ -403,7 +416,9 @@ export function Rsvp({ t }: { t: Translation }) {
 export function Footer({ t }: { t: Translation }) {
   return (
     <footer>
-      <PhotoStrip ratios={['16 / 10', '16 / 10', '16 / 10', '16 / 10']} />
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '2px', padding: '0 2px' }}>
+        {[0, 1, 2, 3].map((i) => <PhotoFrame key={i} ratio="16 / 10" />)}
+      </div>
       <div style={wrap({ paddingTop: 'var(--s-8)', paddingBottom: 'var(--s-9)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--s-5)' })}>
         <span style={{ font: 'var(--type-label)', letterSpacing: 'var(--ls-label)', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>{t.footer}</span>
         <span style={{ font: 'var(--type-label)', letterSpacing: 'var(--ls-label)', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>València · 17.10.26</span>
