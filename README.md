@@ -1,6 +1,6 @@
 # Aida & Iker — Wedding Site
 
-Bilingual (ES/EN) one-page wedding invitation for **Aida & Iker** — 23 July 2026, Tarragona.
+Bilingual (ES/EN) one-page wedding invitation for **Aida & Iker** — 23 July 2026, Valencia.
 Built with **Next.js (App Router) + TypeScript + React**, faithfully recreating the editorial
 "paper" design system from the handoff bundle.
 

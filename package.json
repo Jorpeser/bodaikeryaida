@@ -2,7 +2,7 @@
   "name": "boda-aida-iker",
   "version": "1.0.0",
   "private": true,
-  "description": "Aida & Iker — bilingual wedding invitation site (Tarragona, 23.07.2026)",
+  "description": "Aida & Iker — bilingual wedding invitation site (Valencia, 23.07.2026)",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

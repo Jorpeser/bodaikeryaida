@@ -412,7 +412,7 @@ export function Footer({ t }: { t: Translation }) {
       <PhotoStrip ratios={['16 / 10', '16 / 10', '16 / 10', '16 / 10']} />
       <div style={wrap({ paddingTop: 'var(--s-8)', paddingBottom: 'var(--s-9)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--s-5)' })}>
         <span style={{ font: 'var(--type-label)', letterSpacing: 'var(--ls-label)', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>{t.footer}</span>
-        <span style={{ font: 'var(--type-label)', letterSpacing: 'var(--ls-label)', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>Tarragona · 23.07.26</span>
+        <span style={{ font: 'var(--type-label)', letterSpacing: 'var(--ls-label)', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>València · 17.10.26</span>
       </div>
     </footer>
   );
