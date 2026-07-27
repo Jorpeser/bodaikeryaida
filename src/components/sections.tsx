@@ -43,7 +43,9 @@ export function Hero({ t }: { t: Translation }) {
     <section style={wrap({ paddingTop: 'var(--s-9)', paddingBottom: 'var(--s-8)' })}>
       <SectionHeading size="hero" as="h1">{t.hero[0]}<br />{t.hero[1]}</SectionHeading>
       <div style={{ marginTop: 'var(--s-7)', display: 'flex', justifyContent: 'flex-end' }}>
-        <p style={{ font: 'var(--type-lead)', textTransform: 'uppercase', letterSpacing: 'var(--ls-meta)', color: 'var(--ink)', maxWidth: '40ch', textAlign: 'left' }}>{t.lead}</p>
+        <p style={{ font: 'var(--type-lead)', textTransform: 'uppercase', letterSpacing: 'var(--ls-meta)', color: 'var(--ink)', maxWidth: '40ch', textAlign: 'left' }}>
+          {t.lead.map((line, i) => <React.Fragment key={i}>{i > 0 && <br />}{line}</React.Fragment>)}
+        </p>
       </div>
       <div style={{ marginTop: 'var(--s-8)' }}><Divider /></div>
     </section>
@@ -151,14 +153,9 @@ export function DressCode({ t }: { t: Translation }) {
       <div style={{ marginTop: 'var(--s-6)' }}>
         <SectionHeading>{t.dressTitle[0]}<br />{t.dressTitle[1]}</SectionHeading>
       </div>
-      <div style={{ marginTop: 'var(--s-8)', display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)', gap: 'var(--s-8)', alignItems: 'start' }}>
-        <div>
-          <div style={{ font: 'var(--type-h1)', fontWeight: 'var(--w-bold)', textTransform: 'uppercase', color: 'var(--ink)', letterSpacing: 'var(--ls-tight)' }}>{t.dressType}</div>
-          <p style={{ marginTop: 'var(--s-4)', font: 'var(--type-meta)', textTransform: 'uppercase', letterSpacing: 'var(--ls-meta)', color: 'var(--ink-muted)', maxWidth: '40ch' }}>{t.dressNote}</p>
-        </div>
-        <div style={{ display: 'flex', gap: 'var(--s-3)', flexWrap: 'wrap', justifyContent: 'flex-start' }}>
-          {t.dressChips.map((c, i) => <Button key={i} variant="outline">{c}</Button>)}
-        </div>
+      <div style={{ marginTop: 'var(--s-8)' }}>
+        <div style={{ font: 'var(--type-h1)', fontWeight: 'var(--w-bold)', textTransform: 'uppercase', color: 'var(--ink)', letterSpacing: 'var(--ls-tight)' }}>{t.dressType}</div>
+        <p style={{ marginTop: 'var(--s-4)', font: 'var(--type-meta)', textTransform: 'uppercase', letterSpacing: 'var(--ls-meta)', color: 'var(--ink-muted)', maxWidth: '52ch' }}>{t.dressNote}</p>
       </div>
     </section>
   );

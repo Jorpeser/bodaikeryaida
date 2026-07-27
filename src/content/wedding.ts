@@ -46,7 +46,7 @@ export interface Translation {
   place: string;
   invite: string;
   hero: [string, string];
-  lead: string;
+  lead: [string, string, string];
   names: [string, string];
   rsvp: string;
   countdownLabel: string;
@@ -63,7 +63,6 @@ export interface Translation {
   dressTitle: [string, string];
   dressType: string;
   dressNote: string;
-  dressChips: string[];
   transportLabel: string;
   transportTitle: string;
   transport: TransportItem[];
@@ -95,7 +94,11 @@ export const WEDDING: Record<Lang, Translation> = {
     place: 'Valencia · 2026',
     invite: 'Invitación',
     hero: ['Nos', 'casamos'],
-    lead: 'Queridos amigos y familia, nos casamos. Acompáñanos el 17 de Octubre en Valencia.',
+    lead: [
+      'El gran día está cada vez más cerca y nos encantaría compartirlo con vosotros.',
+      '17 de octubre de 2026 • Valencia',
+      '¡Bienvenidos a nuestra boda!',
+    ],
     names: ['Aida', 'Iker'],
     rsvp: 'Confirmar asistencia',
     countdownLabel: 'Cuenta regresiva',
@@ -111,7 +114,7 @@ export const WEDDING: Record<Lang, Translation> = {
     timelineLabel: '17 de Octubre de 2026',
     timelineTitle: ['Cronología', 'del día'],
     timeline: [
-      ['15:30', 'Llegada de invitados'],
+      ['11:30', 'Llegada de invitados'],
       ['16:00', 'Ceremonia'],
       ['18:30', 'Cóctel'],
       ['21:00', 'Cena'],
@@ -120,9 +123,8 @@ export const WEDDING: Record<Lang, Translation> = {
     ],
     dressLabel: 'Cómo vestir',
     dressTitle: ['Código de', 'vestimenta'],
-    dressType: 'Festivo',
-    dressNote: 'Etiqueta festiva — colores cálidos bienvenidos. Evita el blanco, reservado para la novia.',
-    dressChips: ['Para ellas', 'Para ellos'],
+    dressType: 'Etiqueta elegante de día',
+    dressNote: 'Para él, traje y zapatos de vestir. Para ella, vestido o conjunto de invitada. El blanco queda reservado para la novia.',
     transportLabel: 'Cómo llegar',
     transportTitle: 'Transporte',
     transport: [
@@ -164,7 +166,11 @@ export const WEDDING: Record<Lang, Translation> = {
     place: 'Valencia · 2026',
     invite: 'Invitation',
     hero: ["We're", 'getting married'],
-    lead: 'Dear friends and family, we are getting married. Join us on the 23rd of July in Valencia.',
+    lead: [
+      'The big day is getting closer and we would love to share it with you.',
+      '17th of October 2026 • Valencia',
+      'Welcome to our wedding!',
+    ],
     names: ['Aida', 'Iker'],
     rsvp: 'RSVP',
     countdownLabel: 'Countdown',
@@ -180,7 +186,7 @@ export const WEDDING: Record<Lang, Translation> = {
     timelineLabel: '23rd of July, 2026',
     timelineTitle: ['Timeline', 'of the day'],
     timeline: [
-      ['15:30', 'Guests arrive'],
+      ['11:30', 'Guests arrive'],
       ['16:00', 'Ceremony'],
       ['18:30', 'Cocktail'],
       ['21:00', 'Dinner'],
@@ -189,9 +195,8 @@ export const WEDDING: Record<Lang, Translation> = {
     ],
     dressLabel: 'What to wear',
     dressTitle: ['Dress', 'code'],
-    dressType: 'Festive',
-    dressNote: 'Festive attire — warm colours welcome. Please avoid white, reserved for the bride.',
-    dressChips: ['For her', 'For him'],
+    dressType: 'Elegant day attire',
+    dressNote: 'For him, a suit and dress shoes. For her, a dress or guest outfit. White is reserved for the bride.',
     transportLabel: 'Getting there',
     transportTitle: 'Transport',
     transport: [
