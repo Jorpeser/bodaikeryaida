@@ -9,7 +9,6 @@ interface RsvpPayload {
   attend: string;
   guests: string;
   diet: string;
-  bus: string;
   message: string;
 }
 
@@ -67,7 +66,6 @@ export async function POST(req: NextRequest) {
     sanitize(body.attend, 10),
     sanitize(body.guests, 10),
     sanitize(body.diet, 1000),
-    sanitize(body.bus, 10),
     sanitize(body.message, 2000),
   ];
 

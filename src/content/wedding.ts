@@ -33,9 +33,6 @@ export interface RsvpFields {
   guests: string;
   diet: string;
   dietPh: string;
-  bus: string;
-  busYes: string;
-  busNo: string;
   message: string;
   messagePh: string;
   submit: string;
@@ -101,7 +98,7 @@ export const WEDDING: Record<Lang, Translation> = {
     ],
     names: ['Aida', 'Iker'],
     rsvp: 'Confirmar asistencia',
-    countdownLabel: 'Cuenta regresiva',
+    countdownLabel: 'Cada vez falta menos',
     units: ['Días', 'Horas', 'Minutos', 'Segundos'],
     detailsLabel: 'Detalles',
     detailsTitle: ['Detalles', 'de la boda'],
@@ -148,7 +145,7 @@ export const WEDDING: Record<Lang, Translation> = {
     giftButton: 'Mostrar datos bancarios',
     giftBank: [['Titular', 'Aida & Iker'], ['IBAN', 'ES12 3456 7890 1234 5678 9012'], ['Concepto', 'Vuestro nombre']],
     rsvpLabel: 'Confirmación',
-    rsvpTitle: 'RSVP',
+    rsvpTitle: 'Confirma tu asistencia',
     rsvpSubtitle: 'Por favor, confirma tu asistencia antes del 23 de mayo de 2026',
     rsvpFields: {
       name: 'Nombre completo', namePh: 'Tu nombre', required: '*',
@@ -156,7 +153,6 @@ export const WEDDING: Record<Lang, Translation> = {
       attend: '¿Asistirás?', attendYes: '¡Sí, estaré ahí!', attendNo: 'Lo siento, no puedo asistir',
       guests: 'Número de invitados (incluyéndote a ti)',
       diet: 'Alergias / requisitos dietéticos', dietPh: 'Ej. sin gluten, vegetariano, alergia a frutos secos…',
-      bus: '¿Necesitas transporte en autobús?', busYes: 'Sí, necesito autobús', busNo: 'No, iré por mi cuenta',
       message: 'Mensaje para la pareja', messagePh: 'Comparte tus deseos o un mensaje…',
       submit: 'Enviar confirmación', thanks: '¡Gracias! Hemos recibido tu confirmación.',
     },
@@ -173,7 +169,7 @@ export const WEDDING: Record<Lang, Translation> = {
     ],
     names: ['Aida', 'Iker'],
     rsvp: 'RSVP',
-    countdownLabel: 'Countdown',
+    countdownLabel: 'Getting closer every day',
     units: ['Days', 'Hours', 'Minutes', 'Seconds'],
     detailsLabel: 'Details',
     detailsTitle: ['Wedding', 'details'],
@@ -228,7 +224,6 @@ export const WEDDING: Record<Lang, Translation> = {
       attend: 'Will you attend?', attendYes: "Yes, I'll be there!", attendNo: "Sorry, I can't make it",
       guests: 'Number of guests (including you)',
       diet: 'Allergies / dietary requirements', dietPh: 'E.g. gluten-free, vegetarian, nut allergy…',
-      bus: 'Do you need the shuttle bus?', busYes: 'Yes, I need the bus', busNo: "No, I'll get there myself",
       message: 'Message for the couple', messagePh: 'Share your wishes or a message…',
       submit: 'Send RSVP', thanks: 'Thank you! We have received your confirmation.',
     },

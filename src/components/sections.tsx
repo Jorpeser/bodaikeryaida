@@ -40,7 +40,7 @@ export function Header({ t, lang, setLang }: { t: Translation; lang: Lang; setLa
 /* ---------------- Hero ---------------- */
 export function Hero({ t }: { t: Translation }) {
   return (
-    <section style={wrap({ paddingTop: 'var(--s-9)', paddingBottom: 'var(--s-8)' })}>
+    <section style={wrap({ paddingTop: '50px' })}>
       <SectionHeading size="hero" as="h1">{t.hero[0]}<br />{t.hero[1]}</SectionHeading>
       <div style={{ marginTop: 'var(--s-7)', display: 'flex', justifyContent: 'flex-end' }}>
         <p style={{ font: 'var(--type-lead)', textTransform: 'uppercase', letterSpacing: 'var(--ls-meta)', color: 'var(--ink)', maxWidth: '40ch', textAlign: 'left' }}>
@@ -62,12 +62,12 @@ export function Names({ t, parts }: { t: Translation; parts: number[] }) {
         <SectionHeading size="hero" as="h2">{t.names[1]}</SectionHeading>
       </div>
 
-      <div style={{ marginTop: 'var(--s-7)', display: 'flex', justifyContent: 'center' }}>
+      <div className="rsvp-cta-bounce" style={{ marginTop: 'var(--s-7)', display: 'flex', justifyContent: 'center' }}>
         <Button variant="link" href="#rsvp" iconRight={<Icon name="chevronDown" size={15} />}>{t.rsvp}</Button>
       </div>
 
       <div style={{ marginTop: 'var(--s-9)' }}>
-        <SectionLabel index="00">{t.countdownLabel}</SectionLabel>
+        <SectionLabel>{t.countdownLabel}</SectionLabel>
         <div style={{ marginTop: 'var(--s-6)', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 'var(--col-gap)' }}>
           {parts.map((v, i) => <CountdownUnit key={i} value={v} label={t.units[i]} />)}
         </div>
@@ -88,7 +88,7 @@ export function PhotoStrip({ ratios = ['3 / 4', '3 / 4', '3 / 4', '3 / 4', '3 / 
 
 export function Detalles({ t }: { t: Translation }) {
   return (
-    <section style={wrap({ paddingTop: 'var(--section-y)', paddingBottom: 'var(--s-9)' })}>
+    <section style={wrap({ paddingTop: 'var(--section-y)', paddingBottom: '50px' })}>
       <SectionLabel index="01">{t.detailsLabel}</SectionLabel>
       <div style={{ marginTop: 'var(--s-6)' }}>
         <SectionHeading>{t.detailsTitle[0]}<br />{t.detailsTitle[1]}</SectionHeading>
@@ -133,7 +133,7 @@ export function Detalles({ t }: { t: Translation }) {
 /* ---------------- Timeline ---------------- */
 export function Timeline({ t }: { t: Translation }) {
   return (
-    <section style={wrap({ paddingTop: 'var(--section-y)', paddingBottom: 'var(--s-9)' })}>
+    <section style={wrap({ paddingTop: 'var(--section-y)', paddingBottom: 0 })}>
       <SectionLabel index="02">{t.timelineLabel}</SectionLabel>
       <div style={{ marginTop: 'var(--s-6)' }}>
         <SectionHeading>{t.timelineTitle[0]}<br />{t.timelineTitle[1]}</SectionHeading>
@@ -148,7 +148,7 @@ export function Timeline({ t }: { t: Translation }) {
 /* ---------------- Dress code ---------------- */
 export function DressCode({ t }: { t: Translation }) {
   return (
-    <section style={wrap({ paddingTop: 'var(--section-y)', paddingBottom: 'var(--s-9)' })}>
+    <section style={wrap({ paddingTop: 'var(--section-y)', paddingBottom: 0 })}>
       <SectionLabel index="03">{t.dressLabel}</SectionLabel>
       <div style={{ marginTop: 'var(--s-6)' }}>
         <SectionHeading>{t.dressTitle[0]}<br />{t.dressTitle[1]}</SectionHeading>
@@ -191,7 +191,7 @@ export function DressCode({ t }: { t: Translation }) {
 /* ---------------- Accommodation ---------------- */
 export function Stay({ t }: { t: Translation }) {
   return (
-    <section style={wrap({ paddingTop: 'var(--section-y)', paddingBottom: 'var(--s-9)' })}>
+    <section style={wrap({ paddingTop: 'var(--section-y)', paddingBottom: 0 })}>
       <SectionLabel index="05">{t.stayLabel}</SectionLabel>
       <div style={{ marginTop: 'var(--s-6)' }}>
         <SectionHeading>{t.stayTitle}</SectionHeading>
@@ -215,7 +215,7 @@ export function Stay({ t }: { t: Translation }) {
 /* ---------------- Restaurants ---------------- */
 export function Restaurants({ t }: { t: Translation }) {
   return (
-    <section style={wrap({ paddingTop: 'var(--section-y)', paddingBottom: 'var(--s-9)' })}>
+    <section style={wrap({ paddingTop: 'var(--section-y)', paddingBottom: 0 })}>
       <SectionLabel index="06">{t.restLabel}</SectionLabel>
       <div style={{ marginTop: 'var(--s-6)' }}>
         <SectionHeading>{t.restTitle[0]}<br />{t.restTitle[1]}</SectionHeading>
@@ -236,7 +236,7 @@ export function Restaurants({ t }: { t: Translation }) {
 export function Regalos({ t }: { t: Translation }) {
   const [open, setOpen] = React.useState(false);
   return (
-    <section style={wrap({ paddingTop: 'var(--section-y)', paddingBottom: 'var(--s-9)' })}>
+    <section style={wrap({ paddingTop: 'var(--section-y)', paddingBottom: 0 })}>
       <SectionLabel index="07">{t.giftLabel}</SectionLabel>
       <div style={{ marginTop: 'var(--s-6)' }}>
         <SectionHeading>{t.giftTitle}</SectionHeading>
@@ -266,22 +266,18 @@ export function Regalos({ t }: { t: Translation }) {
 }
 
 /* ---------------- RSVP form ---------------- */
-function FieldLabel({ children, required }: { children: React.ReactNode; required?: boolean }) {
+function FieldLabel({ index, htmlFor, children, required }: { index: string; htmlFor?: string; children: React.ReactNode; required?: boolean }) {
   return (
-    <label style={{ display: 'block', font: 'var(--type-label)', textTransform: 'uppercase', letterSpacing: 'var(--ls-label)', color: 'var(--ink-muted)', marginBottom: 'var(--s-3)' }}>
-      {children}{required && <span style={{ color: 'var(--clay)' }}> *</span>}
+    <label className="rsvp-label" htmlFor={htmlFor}>
+      <span className="rsvp-index">{index}</span>
+      <span>{children}{required && <span style={{ color: 'var(--clay)' }}> *</span>}</span>
     </label>
   );
 }
 
-const fieldInput: React.CSSProperties = {
-  width: '100%', border: 0, borderBottom: '1px solid var(--line-strong)', background: 'transparent',
-  font: 'var(--type-body)', color: 'var(--ink)', padding: '8px 0', outline: 'none',
-};
-
 function RadioOption({ name, label, checked, onChange }: { name: string; label: string; checked: boolean; onChange: () => void }) {
   return (
-    <label style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', gap: 'var(--s-3)', cursor: 'pointer', font: 'var(--type-body)', color: 'var(--ink)' }}>
+    <label className="rsvp-choice" data-checked={checked}>
       <span style={{ width: '18px', height: '18px', borderRadius: '50%', border: '1.5px solid var(--line-strong)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}>
         {checked && <span style={{ width: '9px', height: '9px', borderRadius: '50%', background: 'var(--ink)' }} />}
       </span>
@@ -294,7 +290,6 @@ function RadioOption({ name, label, checked, onChange }: { name: string; label: 
 export function Rsvp({ t }: { t: Translation }) {
   const f = t.rsvpFields;
   const [attend, setAttend] = React.useState<'yes' | 'no'>('yes');
-  const [bus, setBus] = React.useState<'yes' | 'no' | null>(null);
   const [sent, setSent] = React.useState(false);
   const [submitting, setSubmitting] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
@@ -313,7 +308,6 @@ export function Rsvp({ t }: { t: Translation }) {
       attend,
       guests: String(data.get('guests') || ''),
       diet: String(data.get('diet') || ''),
-      bus: bus ?? '',
       message: String(data.get('message') || ''),
     };
 
@@ -347,58 +341,58 @@ export function Rsvp({ t }: { t: Translation }) {
       {sent ? (
         <p style={{ marginTop: 'var(--s-9)', font: 'var(--type-h3)', fontWeight: 'var(--w-bold)', textTransform: 'uppercase', color: 'var(--ink)', letterSpacing: 'var(--ls-tight)' }}>{f.thanks}</p>
       ) : (
-        <form onSubmit={onSubmit} style={{ marginTop: 'var(--s-9)', display: 'flex', flexDirection: 'column', gap: 'var(--s-8)' }}>
-          <div>
-            <FieldLabel required>{f.name}</FieldLabel>
-            <input name="name" style={fieldInput} placeholder={f.namePh} required />
+        <form onSubmit={onSubmit} className="rsvp-form" style={{ marginTop: 'var(--s-8)' }}>
+          <div className="rsvp-form-row">
+            <div>
+              <FieldLabel index="01" htmlFor="rsvp-name" required>{f.name}</FieldLabel>
+              <input id="rsvp-name" name="name" className="rsvp-field" placeholder={f.namePh} required />
+            </div>
+            <div>
+              <FieldLabel index="02" htmlFor="rsvp-email">{f.email}</FieldLabel>
+              <input id="rsvp-email" name="email" type="email" className="rsvp-field" placeholder={f.emailPh} />
+            </div>
           </div>
           <div>
-            <FieldLabel>{f.email}</FieldLabel>
-            <input name="email" type="email" style={fieldInput} placeholder={f.emailPh} />
-          </div>
-          <div>
-            <FieldLabel required>{f.attend}</FieldLabel>
-            <div style={{ display: 'flex', gap: 'var(--s-7)', flexWrap: 'wrap', marginTop: 'var(--s-2)' }}>
+            <FieldLabel index="03" required>{f.attend}</FieldLabel>
+            <div style={{ display: 'flex', gap: 'var(--s-4)', flexWrap: 'wrap', marginTop: 'var(--s-2)' }}>
               <RadioOption name="attend" label={f.attendYes} checked={attend === 'yes'} onChange={() => setAttend('yes')} />
               <RadioOption name="attend" label={f.attendNo} checked={attend === 'no'} onChange={() => setAttend('no')} />
             </div>
           </div>
-          <div style={{ maxWidth: '160px' }}>
-            <FieldLabel>{f.guests}</FieldLabel>
-            <input name="guests" type="number" min="1" defaultValue="1" style={fieldInput} />
-          </div>
-          <div>
-            <FieldLabel>{f.diet}</FieldLabel>
-            <input name="diet" style={fieldInput} placeholder={f.dietPh} />
-          </div>
-          <div>
-            <FieldLabel>{f.bus}</FieldLabel>
-            <div style={{ display: 'flex', gap: 'var(--s-7)', flexWrap: 'wrap', marginTop: 'var(--s-2)' }}>
-              <RadioOption name="bus" label={f.busYes} checked={bus === 'yes'} onChange={() => setBus('yes')} />
-              <RadioOption name="bus" label={f.busNo} checked={bus === 'no'} onChange={() => setBus('no')} />
+          <div className="rsvp-form-row">
+            <div>
+              <FieldLabel index="04" htmlFor="rsvp-guests">{f.guests}</FieldLabel>
+              <input id="rsvp-guests" name="guests" type="number" min="1" defaultValue="1" className="rsvp-field" style={{ maxWidth: '200px' }} />
+            </div>
+            <div>
+              <FieldLabel index="05" htmlFor="rsvp-diet">{f.diet}</FieldLabel>
+              <input id="rsvp-diet" name="diet" className="rsvp-field" placeholder={f.dietPh} />
             </div>
           </div>
           <div>
-            <FieldLabel>{f.message}</FieldLabel>
-            <textarea name="message" rows={4} style={{ ...fieldInput, borderBottom: 0, border: '1px solid var(--line-strong)', padding: 'var(--s-4)', resize: 'vertical', fontFamily: 'var(--font-sans)' }} placeholder={f.messagePh} />
+            <FieldLabel index="06" htmlFor="rsvp-message">{f.message}</FieldLabel>
+            <textarea id="rsvp-message" name="message" rows={4} className="rsvp-field" style={{ resize: 'vertical' }} placeholder={f.messagePh} />
           </div>
-          {error && (
-            <p style={{ font: 'var(--type-meta)', textTransform: 'uppercase', letterSpacing: 'var(--ls-meta)', color: 'var(--clay)' }}>{error}</p>
-          )}
-          <button
-            type="submit"
-            className="rsvp-submit"
-            disabled={submitting}
-            style={{
-              width: '100%', padding: 'var(--s-5)', color: 'var(--paper)', border: 0,
-              cursor: submitting ? 'default' : 'pointer', opacity: submitting ? 0.7 : 1,
-              display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.6em',
-              font: 'var(--type-label)', fontWeight: 'var(--w-medium)', textTransform: 'uppercase',
-              letterSpacing: 'var(--ls-meta)', transition: 'background var(--dur-fast) var(--ease)',
-            }}
-          >
-            <Icon name="arrowRight" size={16} color="var(--paper)" />{f.submit}
-          </button>
+          <div className="rsvp-form-actions">
+            {error && (
+              <p style={{ font: 'var(--type-meta)', textTransform: 'uppercase', letterSpacing: 'var(--ls-meta)', color: 'var(--clay)' }}>{error}</p>
+            )}
+            <button
+              type="submit"
+              className="rsvp-submit"
+              disabled={submitting}
+              style={{
+                width: '100%', padding: 'var(--s-5)', color: 'var(--paper)', border: 0,
+                borderRadius: 'var(--r-sm)',
+                cursor: submitting ? 'default' : 'pointer', opacity: submitting ? 0.7 : 1,
+                display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.6em',
+                font: 'var(--type-label)', fontWeight: 'var(--w-medium)', textTransform: 'uppercase',
+                letterSpacing: 'var(--ls-meta)', transition: 'background var(--dur-fast) var(--ease)',
+              }}
+            >
+              <Icon name="arrowRight" size={16} color="var(--paper)" />{f.submit}
+            </button>
+          </div>
         </form>
       )}
     </section>

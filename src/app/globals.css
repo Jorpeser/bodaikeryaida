@@ -165,7 +165,11 @@
    ============================================================ */
 *, *::before, *::after { box-sizing: border-box; }
 
-html { -webkit-text-size-adjust: 100%; background: var(--paper); }
+html {
+  -webkit-text-size-adjust: 100%;
+  background: var(--paper);
+  scroll-behavior: smooth;
+}
 
 body {
   margin: 0;
@@ -221,6 +225,94 @@ hr {
 /* --- RSVP submit button hover (ink -> clay) ------------------------------- */
 .rsvp-submit { background: var(--ink); }
 .rsvp-submit:hover { background: var(--clay); }
+
+/* --- RSVP form panel ------------------------------------------------------ */
+.rsvp-form {
+  display: grid;
+  gap: var(--s-6);
+  padding: var(--s-6);
+  border: var(--bw-hair) solid var(--line-strong);
+  background: var(--paper-2);
+}
+
+.rsvp-form-row {
+  display: grid;
+  gap: var(--s-6);
+  grid-template-columns: 1fr;
+}
+
+.rsvp-label {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-3);
+  margin-bottom: var(--s-3);
+  font: var(--type-label);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-label);
+  color: var(--ink-muted);
+}
+
+.rsvp-index {
+  flex: none;
+  color: var(--ink-faint);
+  letter-spacing: var(--ls-meta);
+}
+
+.rsvp-field {
+  width: 100%;
+  padding: 14px var(--s-4);
+  border: var(--bw-hair) solid var(--line-strong);
+  border-radius: var(--r-sm);
+  background: var(--paper);
+  font: var(--type-body);
+  color: var(--ink);
+  outline: none;
+  transition: border-color var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
+}
+
+.rsvp-field::placeholder { color: var(--ink-faint); }
+.rsvp-field:hover { border-color: var(--ink-muted); }
+.rsvp-field:focus { border-color: var(--clay); box-shadow: 0 0 0 3px rgba(176, 86, 58, 0.14); }
+
+.rsvp-choice {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding: 12px var(--s-5);
+  border: var(--bw-hair) solid var(--line-strong);
+  border-radius: var(--r-pill);
+  background: var(--paper);
+  cursor: pointer;
+  font: var(--type-body);
+  color: var(--ink);
+  transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+}
+
+.rsvp-choice:hover { border-color: var(--ink-muted); }
+.rsvp-choice[data-checked='true'] { border-color: var(--ink); background: rgba(35, 32, 26, 0.05); }
+
+.rsvp-form-actions {
+  display: grid;
+  gap: var(--s-4);
+  padding-top: var(--s-6);
+  border-top: var(--bw-hair) solid var(--rule);
+}
+
+@media (min-width: 720px) {
+  .rsvp-form { padding: var(--s-7); gap: var(--s-7); }
+  .rsvp-form-row { grid-template-columns: 1fr 1fr; }
+}
+
+/* --- Names RSVP CTA bounce ------------------------------------------------ */
+@keyframes rsvp-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+
+.rsvp-cta-bounce {
+  animation: rsvp-bounce 1.6s var(--ease) infinite;
+}
 
 /* --- InfoCard illustration grid — mobile-first responsive ----------------- */
 .info-card-grid {

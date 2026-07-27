@@ -55,7 +55,7 @@ export function InfoCard({ eyebrow, illustration, title, address, meta = [], sty
             textTransform: 'uppercase',
             color: 'var(--ink)',
             letterSpacing: 'var(--ls-tight)',
-            margin: 0,
+            margin: 'var(--s-5) 0',
           }}
         >
           {title}
