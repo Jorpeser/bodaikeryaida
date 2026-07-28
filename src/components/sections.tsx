@@ -25,9 +25,9 @@ function wrap(extra?: React.CSSProperties): React.CSSProperties {
 /* ---------------- Header ---------------- */
 export function Header({ t, lang, setLang }: { t: Translation; lang: Lang; setLang: (l: Lang) => void }) {
   return (
-    <header style={wrap({ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', paddingTop: 'var(--s-7)' })}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-        <span style={{ font: 'var(--type-label)', letterSpacing: 'var(--ls-label)', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>{t.place}</span>
+    <header style={wrap({ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 'var(--s-7)' })}>
+      <div style={{ display: 'flex', alignItems: 'center', height: '36px' }}>
+        <span style={{ display: 'block', font: 'var(--type-label)', lineHeight: 1, letterSpacing: 'var(--ls-label)', textTransform: 'uppercase', color: 'var(--ink-muted)', transform: 'translateY(8px)' }}>{t.place}</span>
       </div>
       <LangToggle value={lang === 'es' ? 'ES' : 'EN'} onChange={(v) => setLang(v === 'ES' ? 'es' : 'en')} />
     </header>
@@ -83,17 +83,231 @@ const CAROUSEL_PHOTOS = [
 ];
 
 export function PhotoStrip() {
-  // Duplicate track for seamless loop
+  const scrollerRef = React.useRef<HTMLElement | null>(null);
+  const lightboxFrameRef = React.useRef<HTMLDivElement | null>(null);
+  const dragRef = React.useRef({ active: false, moved: false, startX: 0, startScrollLeft: 0 });
+  const lightboxDragRef = React.useRef({ active: false, startX: 0, deltaX: 0 });
+  const [dragging, setDragging] = React.useState(false);
+  const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
+  const [lightboxOffset, setLightboxOffset] = React.useState(0);
+  const [lightboxAnimating, setLightboxAnimating] = React.useState(false);
+
+  const goToPhoto = React.useCallback((direction: 1 | -1) => {
+    setActiveIndex((current) => {
+      if (current === null) return current;
+      return (current + direction + CAROUSEL_PHOTOS.length) % CAROUSEL_PHOTOS.length;
+    });
+  }, []);
+
+  React.useEffect(() => {
+    const node = scrollerRef.current;
+    if (!node) return;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    let frame = 0;
+    let last = performance.now();
+
+    const loop = (now: number) => {
+      const loopWidth = node.scrollWidth / 2;
+      const dt = now - last;
+      last = now;
+
+      if (!dragRef.current.active && activeIndex === null) {
+        node.scrollLeft += dt * 0.04;
+        if (node.scrollLeft >= loopWidth) {
+          node.scrollLeft -= loopWidth;
+        }
+      }
+
+      frame = window.requestAnimationFrame(loop);
+    };
+
+    frame = window.requestAnimationFrame(loop);
+    return () => window.cancelAnimationFrame(frame);
+  }, [activeIndex]);
+
+  const commitLightboxSwipe = React.useCallback((direction: 1 | -1) => {
+    const frameWidth = lightboxFrameRef.current?.clientWidth ?? 0;
+    setLightboxAnimating(true);
+    setLightboxOffset(direction === 1 ? -frameWidth : frameWidth);
+    window.setTimeout(() => {
+      goToPhoto(direction);
+      setLightboxAnimating(false);
+      setLightboxOffset(0);
+    }, 220);
+  }, [goToPhoto]);
+
+  React.useEffect(() => {
+    if (activeIndex === null) return;
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setActiveIndex(null);
+      if (e.key === 'ArrowRight') commitLightboxSwipe(1);
+      if (e.key === 'ArrowLeft') commitLightboxSwipe(-1);
+    };
+
+    const { overflow } = document.body.style;
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      document.body.style.overflow = overflow;
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, [activeIndex, commitLightboxSwipe]);
+
+  const onPointerDown = (e: React.PointerEvent<HTMLElement>) => {
+    if (activeIndex !== null) return;
+    const node = scrollerRef.current;
+    if (!node) return;
+    setDragging(true);
+    dragRef.current = {
+      active: true,
+      moved: false,
+      startX: e.clientX,
+      startScrollLeft: node.scrollLeft,
+    };
+    node.setPointerCapture(e.pointerId);
+  };
+
+  const onPointerMove = (e: React.PointerEvent<HTMLElement>) => {
+    if (activeIndex !== null) return;
+    const node = scrollerRef.current;
+    if (!node || !dragRef.current.active) return;
+    e.preventDefault();
+    const delta = e.clientX - dragRef.current.startX;
+    if (Math.abs(delta) > 6) dragRef.current.moved = true;
+    node.scrollLeft = dragRef.current.startScrollLeft - delta;
+    const loopWidth = node.scrollWidth / 2;
+    if (node.scrollLeft < 0) node.scrollLeft += loopWidth;
+    if (node.scrollLeft >= loopWidth) node.scrollLeft -= loopWidth;
+  };
+
+  const onPointerUp = (e: React.PointerEvent<HTMLElement>) => {
+    if (activeIndex !== null) return;
+    const node = scrollerRef.current;
+    dragRef.current.active = false;
+    setDragging(false);
+    node?.releasePointerCapture(e.pointerId);
+  };
+
   const track = [...CAROUSEL_PHOTOS, ...CAROUSEL_PHOTOS];
+
   return (
-    <section className="photo-carousel" aria-roledescription="carousel" aria-label="Fotos">
+    <section
+      ref={scrollerRef}
+      className="photo-carousel"
+      data-dragging={dragging}
+      aria-roledescription="carousel"
+      aria-label="Fotos"
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={onPointerUp}
+      onPointerCancel={onPointerUp}
+    >
       <div className="photo-carousel-track">
         {track.map((src, idx) => (
-          <div key={idx} className="photo-carousel-slide">
-            <PhotoFrame src={src} alt="" ratio="3 / 4" bw={false} />
+          <div key={`${src}-${idx}`} className="photo-carousel-slide">
+            <button
+              type="button"
+              className="photo-carousel-photo"
+              onClick={() => {
+                if (!dragRef.current.moved) setActiveIndex(idx % CAROUSEL_PHOTOS.length);
+              }}
+            >
+              <PhotoFrame src={src} alt="" ratio="3 / 4" bw={false} draggable={false} />
+            </button>
           </div>
         ))}
       </div>
+      {activeIndex !== null && (
+        <div
+          className="photo-lightbox"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Foto ampliada"
+          onClick={() => setActiveIndex(null)}
+          onPointerDown={(e) => e.stopPropagation()}
+          onPointerMove={(e) => e.stopPropagation()}
+          onPointerUp={(e) => e.stopPropagation()}
+          onPointerCancel={(e) => e.stopPropagation()}
+        >
+          <button type="button" className="photo-lightbox-close" aria-label="Cerrar foto" onClick={() => setActiveIndex(null)}>
+            Cerrar
+          </button>
+          <div
+            ref={lightboxFrameRef}
+            className="photo-lightbox-frame"
+            onClick={(e) => e.stopPropagation()}
+            onPointerDown={(e) => {
+              e.stopPropagation();
+              setLightboxAnimating(false);
+              lightboxDragRef.current = { active: true, startX: e.clientX, deltaX: 0 };
+            }}
+            onPointerMove={(e) => {
+              e.stopPropagation();
+              if (!lightboxDragRef.current.active) return;
+              lightboxDragRef.current.deltaX = e.clientX - lightboxDragRef.current.startX;
+              setLightboxOffset(lightboxDragRef.current.deltaX);
+            }}
+            onPointerUp={(e) => {
+              e.stopPropagation();
+              if (!lightboxDragRef.current.active) return;
+              const deltaX = lightboxDragRef.current.deltaX;
+              lightboxDragRef.current.active = false;
+              if (deltaX <= -50) {
+                commitLightboxSwipe(1);
+                return;
+              }
+              if (deltaX >= 50) {
+                commitLightboxSwipe(-1);
+                return;
+              }
+              setLightboxAnimating(true);
+              setLightboxOffset(0);
+              window.setTimeout(() => setLightboxAnimating(false), 220);
+            }}
+            onPointerCancel={(e) => {
+              e.stopPropagation();
+              lightboxDragRef.current.active = false;
+              setLightboxAnimating(true);
+              setLightboxOffset(0);
+              window.setTimeout(() => setLightboxAnimating(false), 220);
+            }}
+          >
+            <div
+              className="photo-lightbox-track"
+              style={{
+                transform: `translateX(calc(-33.3333% + ${lightboxOffset}px))`,
+                transition: lightboxAnimating ? 'transform 220ms var(--ease)' : 'none',
+              }}
+            >
+              {[activeIndex - 1, activeIndex, activeIndex + 1].map((index) => {
+                const normalized = (index + CAROUSEL_PHOTOS.length) % CAROUSEL_PHOTOS.length;
+                return (
+                  <div key={index} className="photo-lightbox-slide">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={CAROUSEL_PHOTOS[normalized]} alt="" className="photo-lightbox-image" draggable={false} />
+                  </div>
+                );
+              })}
+            </div>
+            <div className="photo-lightbox-dots" onClick={(e) => e.stopPropagation()}>
+              {CAROUSEL_PHOTOS.map((_, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  className="photo-lightbox-dot"
+                  data-active={idx === activeIndex}
+                  aria-label={`Ir a foto ${idx + 1}`}
+                  onClick={() => setActiveIndex(idx)}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
