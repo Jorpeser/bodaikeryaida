@@ -82,7 +82,7 @@ const CAROUSEL_PHOTOS = [
   '/photos/05.jpg',
 ];
 
-export function PhotoStrip() {
+export function PhotoStrip({ bw = false }: { bw?: boolean }) {
   const scrollerRef = React.useRef<HTMLElement | null>(null);
   const lightboxFrameRef = React.useRef<HTMLDivElement | null>(null);
   const dragRef = React.useRef({ active: false, moved: false, startX: 0, startScrollLeft: 0 });
@@ -216,7 +216,7 @@ export function PhotoStrip() {
                 if (!dragRef.current.moved) setActiveIndex(idx % CAROUSEL_PHOTOS.length);
               }}
             >
-              <PhotoFrame src={src} alt="" ratio="3 / 4" bw={false} draggable={false} />
+              <PhotoFrame src={src} alt="" ratio="3 / 4" bw={bw} draggable={false} />
             </button>
           </div>
         ))}
@@ -630,9 +630,7 @@ export function Rsvp({ t }: { t: Translation }) {
 export function Footer({ t }: { t: Translation }) {
   return (
     <footer>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '2px', padding: '0 2px' }}>
-        {[0, 1, 2, 3].map((i) => <PhotoFrame key={i} ratio="16 / 10" />)}
-      </div>
+      <PhotoStrip bw />
       <div style={wrap({ paddingTop: 'var(--s-8)', paddingBottom: 'var(--s-9)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--s-5)' })}>
         <span style={{ font: 'var(--type-label)', letterSpacing: 'var(--ls-label)', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>{t.footer}</span>
         <span style={{ font: 'var(--type-label)', letterSpacing: 'var(--ls-label)', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>València · 17.10.26</span>
