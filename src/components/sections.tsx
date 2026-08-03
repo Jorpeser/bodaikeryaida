@@ -87,11 +87,13 @@ const CAROUSEL_PHOTOS = [
 ];
 
 export function PhotoStrip() {
-  const scrollerRef = React.useRef<HTMLElement | null>(null);
+  const dragLayerRef = React.useRef<HTMLDivElement | null>(null);
+  const trackRef = React.useRef<HTMLDivElement | null>(null);
   const lightboxFrameRef = React.useRef<HTMLDivElement | null>(null);
-  const dragRef = React.useRef({ active: false, moved: false, startX: 0, startScrollLeft: 0 });
+  const dragRef = React.useRef({ active: false, moved: false, startX: 0, origin: 0 });
   const lightboxDragRef = React.useRef({ active: false, startX: 0, deltaX: 0 });
   const [dragging, setDragging] = React.useState(false);
+  const [dragOffset, setDragOffset] = React.useState(0);
   const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
   const [lightboxOffset, setLightboxOffset] = React.useState(0);
   const [lightboxAnimating, setLightboxAnimating] = React.useState(false);
@@ -103,33 +105,13 @@ export function PhotoStrip() {
     });
   }, []);
 
-  React.useEffect(() => {
-    const node = scrollerRef.current;
-    if (!node) return;
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) return;
-
-    let frame = 0;
-    let last = performance.now();
-
-    const loop = (now: number) => {
-      const loopWidth = node.scrollWidth / 2;
-      const dt = now - last;
-      last = now;
-
-      if (!dragRef.current.active && activeIndex === null) {
-        node.scrollLeft += dt * 0.04;
-        if (node.scrollLeft >= loopWidth) {
-          node.scrollLeft -= loopWidth;
-        }
-      }
-
-      frame = window.requestAnimationFrame(loop);
-    };
-
-    frame = window.requestAnimationFrame(loop);
-    return () => window.cancelAnimationFrame(frame);
-  }, [activeIndex]);
+  const wrapOffset = React.useCallback((value: number) => {
+    const loopWidth = (trackRef.current?.scrollWidth ?? 0) / 2;
+    if (loopWidth <= 0) return value;
+    let next = value % loopWidth;
+    if (next > 0) next -= loopWidth;
+    return next;
+  }, []);
 
   const commitLightboxSwipe = React.useCallback((direction: 1 | -1) => {
     const frameWidth = lightboxFrameRef.current?.clientWidth ?? 0;
@@ -161,69 +143,68 @@ export function PhotoStrip() {
     };
   }, [activeIndex, commitLightboxSwipe]);
 
-  const onPointerDown = (e: React.PointerEvent<HTMLElement>) => {
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     if (activeIndex !== null) return;
-    const node = scrollerRef.current;
+    const node = dragLayerRef.current;
     if (!node) return;
     setDragging(true);
     dragRef.current = {
       active: true,
       moved: false,
       startX: e.clientX,
-      startScrollLeft: node.scrollLeft,
+      origin: dragOffset,
     };
     node.setPointerCapture(e.pointerId);
   };
 
-  const onPointerMove = (e: React.PointerEvent<HTMLElement>) => {
-    if (activeIndex !== null) return;
-    const node = scrollerRef.current;
-    if (!node || !dragRef.current.active) return;
-    e.preventDefault();
+  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (activeIndex !== null || !dragRef.current.active) return;
     const delta = e.clientX - dragRef.current.startX;
     if (Math.abs(delta) > 6) dragRef.current.moved = true;
-    node.scrollLeft = dragRef.current.startScrollLeft - delta;
-    const loopWidth = node.scrollWidth / 2;
-    if (node.scrollLeft < 0) node.scrollLeft += loopWidth;
-    if (node.scrollLeft >= loopWidth) node.scrollLeft -= loopWidth;
+    setDragOffset(wrapOffset(dragRef.current.origin + delta));
   };
 
-  const onPointerUp = (e: React.PointerEvent<HTMLElement>) => {
+  const onPointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
     if (activeIndex !== null) return;
-    const node = scrollerRef.current;
     dragRef.current.active = false;
     setDragging(false);
-    node?.releasePointerCapture(e.pointerId);
+    dragLayerRef.current?.releasePointerCapture(e.pointerId);
   };
 
   const track = [...CAROUSEL_PHOTOS, ...CAROUSEL_PHOTOS];
 
   return (
     <section
-      ref={scrollerRef}
       className="photo-carousel"
       data-dragging={dragging}
+      data-paused={activeIndex !== null}
       aria-roledescription="carousel"
       aria-label="Fotos"
-      onPointerDown={onPointerDown}
-      onPointerMove={onPointerMove}
-      onPointerUp={onPointerUp}
-      onPointerCancel={onPointerUp}
     >
-      <div className="photo-carousel-track">
-        {track.map((src, idx) => (
-          <div key={`${src}-${idx}`} className="photo-carousel-slide">
-            <button
-              type="button"
-              className="photo-carousel-photo"
-              onClick={() => {
-                if (!dragRef.current.moved) setActiveIndex(idx % CAROUSEL_PHOTOS.length);
-              }}
-            >
-              <PhotoFrame src={src} alt="" ratio="3 / 4" draggable={false} />
-            </button>
-          </div>
-        ))}
+      <div
+        ref={dragLayerRef}
+        className="photo-carousel-drag"
+        style={{ transform: `translateX(${dragOffset}px)` }}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerUp}
+      >
+        <div ref={trackRef} className="photo-carousel-track">
+          {track.map((src, idx) => (
+            <div key={`${src}-${idx}`} className="photo-carousel-slide">
+              <button
+                type="button"
+                className="photo-carousel-photo"
+                onClick={() => {
+                  if (!dragRef.current.moved) setActiveIndex(idx % CAROUSEL_PHOTOS.length);
+                }}
+              >
+                <PhotoFrame src={src} alt="" ratio="3 / 4" draggable={false} />
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
       {activeIndex !== null && (
         <div
@@ -319,9 +300,12 @@ export function PhotoStrip() {
 
 function ParkingToggle({ label, mapsLabel, parkings }: { label: string; mapsLabel: string; parkings: NonNullable<Translation['venues'][number]['parkings']> }) {
   return (
-    <details className="parking-accordion" style={{ marginTop: 'var(--s-5)' }}>
+    <details className="parking-accordion">
       <summary className="parking-accordion-summary">
-        <span>{label}</span>
+        <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <Icon name="parking" size={16} color="var(--clay)" />
+          {label}
+        </span>
         <Icon name="chevronDown" size={14} />
       </summary>
       <div className="parking-accordion-body">
@@ -346,7 +330,7 @@ export function Detalles({ t }: { t: Translation }) {
       <div style={{ marginTop: 'var(--s-6)' }}>
         <SectionHeading>{t.detailsTitle[0]}<br />{t.detailsTitle[1]}</SectionHeading>
       </div>
-      <div style={{ marginTop: 'var(--s-9)', display: 'flex', flexDirection: 'column', gap: 'var(--s-7)' }}>
+      <div style={{ marginTop: '50px', display: 'flex', flexDirection: 'column', gap: 'var(--s-7)' }}>
         {t.venues.map((v, i) => {
           const illustrations: (React.ReactNode | undefined)[] = [
             <img
@@ -364,7 +348,6 @@ export function Detalles({ t }: { t: Translation }) {
           ];
           return (
             <React.Fragment key={i}>
-              <Divider />
               <InfoCard
                 eyebrow={v.tag}
                 illustration={illustrations[i]}
@@ -460,7 +443,7 @@ export function Stay({ t }: { t: Translation }) {
                 <SectionLabel rule>{s.group}</SectionLabel>
               </div>
             )}
-            <Divider />
+            {i > 0 && s.group === t.stays[i - 1]?.group && <Divider />}
             <div style={{ padding: 'var(--s-6) 0', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--s-5)' }}>
               <div>
                 <h3 style={{ display: 'flex', alignItems: 'baseline', gap: 'var(--s-3)', flexWrap: 'wrap', font: 'var(--type-h3)', fontWeight: 'var(--w-bold)', textTransform: 'uppercase', color: 'var(--ink)', letterSpacing: 'var(--ls-tight)' }}>
@@ -516,9 +499,8 @@ export function Regalos({ t }: { t: Translation }) {
       <div style={{ marginTop: 'var(--s-6)' }}>
         <SectionHeading>{t.giftTitle}</SectionHeading>
       </div>
-      <div style={{ marginTop: 'var(--s-8)' }}><Divider /></div>
       <p style={{ marginTop: 'var(--s-8)', font: 'var(--type-h2)', fontWeight: 'var(--w-bold)', textTransform: 'uppercase', color: 'var(--ink)', letterSpacing: 'var(--ls-tight)', lineHeight: 'var(--lh-tight)', maxWidth: '24ch', textWrap: 'balance' }}>{t.giftStatement}</p>
-      <div style={{ marginTop: 'var(--s-9)' }}>
+      <div style={{ marginTop: '50px' }}>
         <SectionLabel rule>{t.giftSubLabel}</SectionLabel>
         <p style={{ marginTop: 'var(--s-5)', font: 'var(--type-meta)', textTransform: 'uppercase', letterSpacing: 'var(--ls-meta)', color: 'var(--ink-muted)', maxWidth: '54ch' }}>{t.giftNote}</p>
         <div style={{ marginTop: 'var(--s-6)' }}>

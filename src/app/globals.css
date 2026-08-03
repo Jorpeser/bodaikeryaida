@@ -314,7 +314,7 @@ hr {
   animation: rsvp-bounce 1.6s var(--ease) infinite;
 }
 
-/* --- Photo carousel — 3 visibles, autoplay + drag ------------------------- */
+/* --- Photo carousel — 3 visibles, CSS autoplay + drag --------------------- */
 .photo-carousel {
   overflow: hidden;
   padding: 0 2px;
@@ -323,11 +323,16 @@ hr {
   touch-action: pan-y;
 }
 
+.photo-carousel-drag {
+  touch-action: pan-y;
+}
+
 .photo-carousel-track {
   display: flex;
   gap: 2px;
   width: max-content;
   will-change: transform;
+  animation: photo-carousel-scroll 64s linear infinite;
 }
 
 .photo-carousel-slide {
@@ -351,6 +356,16 @@ hr {
 
 .photo-carousel[data-dragging='true'] {
   cursor: grabbing;
+}
+
+.photo-carousel[data-dragging='true'] .photo-carousel-track,
+.photo-carousel[data-paused='true'] .photo-carousel-track {
+  animation-play-state: paused;
+}
+
+@keyframes photo-carousel-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(-50% - 1px)); }
 }
 
 .photo-lightbox {
@@ -434,7 +449,10 @@ hr {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .photo-carousel-track { width: max-content; }
+  .photo-carousel-track {
+    animation: none;
+    width: max-content;
+  }
 }
 
 /* --- Parking accordion ---------------------------------------------------- */
@@ -460,12 +478,12 @@ hr {
 
 .parking-accordion-summary::-webkit-details-marker { display: none; }
 
-.parking-accordion-summary svg {
+.parking-accordion-summary > svg {
   flex: none;
   transition: transform var(--dur-fast) var(--ease);
 }
 
-.parking-accordion[open] > .parking-accordion-summary svg {
+.parking-accordion[open] > .parking-accordion-summary > svg {
   transform: rotate(180deg);
 }
 
