@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { google } from 'googleapis';
 
 export const runtime = 'nodejs';
 
@@ -18,32 +17,21 @@ function sanitize(value: unknown, max = 2000): string {
 }
 
 async function appendToSheet(row: string[]): Promise<void> {
-  const email = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
-  const key = process.env.GOOGLE_PRIVATE_KEY;
-  const sheetId = process.env.GOOGLE_SHEET_ID;
-  const tab = process.env.GOOGLE_SHEET_TAB || 'RSVP';
+  const url = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
 
   // If the integration isn't configured, no-op (the form still succeeds and we
   // log it). This lets the site run before the Google Sheet is set up.
-  if (!email || !key || !sheetId) {
+  if (!url) {
     console.log('[rsvp] Google Sheets not configured — submission not stored:', row);
     return;
   }
 
-  const auth = new google.auth.JWT({
-    email,
-    key: key.replace(/\\n/g, '\n'),
-    scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ row }),
   });
-
-  const sheets = google.sheets({ version: 'v4', auth });
-  await sheets.spreadsheets.values.append({
-    spreadsheetId: sheetId,
-    range: `${tab}!A1`,
-    valueInputOption: 'USER_ENTERED',
-    insertDataOption: 'INSERT_ROWS',
-    requestBody: { values: [row] },
-  });
+  if (!res.ok) throw new Error(`Apps Script webhook returned ${res.status}`);
 }
 
 export async function POST(req: NextRequest) {

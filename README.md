@@ -9,7 +9,7 @@ Built with **Next.js (App Router) + TypeScript + React**, faithfully recreating 
 - **Next.js 15** (App Router), **React 19**, **TypeScript**
 - No CSS framework — the design system tokens live in `src/app/globals.css` and components
   use inline styles referencing those CSS variables (ported verbatim from the design bundle).
-- RSVP submissions are appended to a **Google Sheet** via a service account.
+- RSVP submissions are appended to a **Google Sheet** via an Apps Script Web App.
 
 ## Getting started
 
@@ -49,38 +49,47 @@ black-and-white treatment. When photos are ready, wire them into `PhotoStrip` /
 
 ## RSVP → Google Sheets setup
 
-The RSVP form posts to `/api/rsvp`, which appends a row to a Google Sheet. Until the
-integration is configured the form still works — submissions are logged to the server
-console and not stored.
+The RSVP form posts to `/api/rsvp`, which forwards each submission to a Google Apps Script
+Web App bound to a Sheet. Until it's configured the form still works — submissions are
+logged to the server console and not stored. No Google Cloud project, service account, or
+API key needed.
 
 To enable storage:
 
-1. In **Google Cloud Console**, create a project and enable the **Google Sheets API**.
-2. Create a **Service Account**, then create a **JSON key** for it.
-3. Create a **Google Sheet**. Add a header row in a tab named `RSVP`, e.g.:
-   `Timestamp | Name | Email | Attending | Guests | Dietary | Bus | Message`
-4. **Share** the sheet (Editor) with the service account's email.
-5. Copy `.env.local.example` to `.env.local` and fill in:
-   - `GOOGLE_SERVICE_ACCOUNT_EMAIL` — the service account email
-   - `GOOGLE_PRIVATE_KEY` — the `private_key` from the JSON (keep the quotes and `\n` escapes)
-   - `GOOGLE_SHEET_ID` — the long id from the sheet URL
-   - `GOOGLE_SHEET_TAB` — optional tab name (defaults to `RSVP`)
+1. Create a **Google Sheet**.
+2. **Extensions ▸ Apps Script**, and replace the default code with:
+   ```javascript
+   function doPost(e) {
+     var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('RSVP')
+       || SpreadsheetApp.getActiveSpreadsheet().insertSheet('RSVP');
+     if (sheet.getLastRow() === 0) {
+       sheet.appendRow(['Timestamp', 'Nombre', 'Email', 'Asiste', 'Invitados', 'Dieta', 'Mensaje']);
+     }
+     var data = JSON.parse(e.postData.contents);
+     sheet.appendRow(data.row);
+     return ContentService.createTextOutput(JSON.stringify({ ok: true }))
+       .setMimeType(ContentService.MimeType.JSON);
+   }
+   ```
+3. **Deploy ▸ New deployment** ▸ type **Web app** ▸ Execute as **Me** ▸ Who has access
+   **Anyone**. Deploy, authorize the permissions it asks for, and copy the Web app URL
+   (ends in `/exec`).
+4. Copy `.env.local.example` to `.env.local` and set `GOOGLE_SHEETS_WEBHOOK_URL` to that URL.
 
 Rows are appended in this column order:
-`timestamp, name, email, attend, guests, diet, bus, message`.
+`timestamp, name, email, attend, guests, diet, message`.
 
 ## Deploying (Vercel)
 
 1. Push this repo to GitHub.
 2. Import it in **Vercel** (it auto-detects Next.js).
-3. Add the four `GOOGLE_*` environment variables in the Vercel project settings.
+3. Add `GOOGLE_SHEETS_WEBHOOK_URL` in the Vercel project settings.
 4. Deploy.
 
 ## Notes
 
-- `npm audit` reports 6 **moderate** advisories from `googleapis`' transitive `uuid`/`gaxios`
-  dependencies (server-side only). They have no non-breaking fix yet; revisit on `googleapis`
-  upgrades. The previously-flagged critical Next.js advisory is resolved (pinned to 15.5.19).
+- `npm audit` reports 0 vulnerabilities. Next.js is pinned to 15.5.22 (patched), and `sharp`/
+  `postcss` — pulled in transitively by Next with vulnerable version ranges — are pinned to
+  patched versions via `overrides` in `package.json`.
 - The original design handoff lives in `aida-iker-wedding-design-system/` (git-ignored) for
   reference; it is not part of the app build.
-```
