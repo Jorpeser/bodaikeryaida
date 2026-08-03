@@ -18,7 +18,7 @@ export function PhotoFrame({
   src,
   alt = '',
   ratio = '3 / 4',
-  bw = true,
+  bw = false,
   caption,
   placeholder = 'Foto',
   style,

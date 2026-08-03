@@ -2,12 +2,19 @@
 
 export type Lang = 'es' | 'en';
 
+export interface ParkingItem {
+  name: string;
+  addr: string;
+  mapsUrl: string;
+}
+
 export interface Venue {
   tag: string;
   name: string;
   addr: string;
   time: string;
   mapsUrl: string;
+  parkings?: ParkingItem[];
 }
 
 export interface TransportItem {
@@ -17,8 +24,18 @@ export interface TransportItem {
 }
 
 export interface StayItem {
+  group: string;
   name: string;
+  stars: number;
   note: string;
+  url: string;
+}
+
+export interface RestaurantItem {
+  name: string;
+  addr: string;
+  mapsUrl: string;
+  webUrl?: string;
 }
 
 export interface RsvpFields {
@@ -43,7 +60,7 @@ export interface Translation {
   place: string;
   invite: string;
   hero: [string, string];
-  lead: [string, string, string];
+  lead: [string, string];
   names: [string, string];
   rsvp: string;
   countdownLabel: string;
@@ -53,6 +70,7 @@ export interface Translation {
   ceremony: string;
   celebration: string;
   venues: Venue[];
+  parkingToggleLabel: string;
   timelineLabel: string;
   timelineTitle: [string, string];
   timeline: [string, string][];
@@ -66,9 +84,12 @@ export interface Translation {
   stayLabel: string;
   stayTitle: string;
   stays: StayItem[];
+  stayBookLabel: string;
   restLabel: string;
   restTitle: [string, string];
-  rest: string[];
+  rest: RestaurantItem[];
+  restMapsLabel: string;
+  restWebLabel: string;
   giftLabel: string;
   giftTitle: string;
   giftStatement: string;
@@ -93,7 +114,6 @@ export const WEDDING: Record<Lang, Translation> = {
     hero: ['Nos', 'casamos'],
     lead: [
       'El gran día está cada vez más cerca y nos encantaría compartirlo con vosotros.',
-      '17 de octubre de 2026 • Valencia',
       '¡Bienvenidos a nuestra boda!',
     ],
     names: ['Aida', 'Iker'],
@@ -105,9 +125,13 @@ export const WEDDING: Record<Lang, Translation> = {
     ceremony: 'Ceremonia',
     celebration: 'Celebración',
     venues: [
-      { tag: 'Ceremonia', name: 'Basilica de San Vicente Ferrer', addr: 'C/ de Ciril Amorós, 56, LEixample, 46004 València', time: '12:00H', mapsUrl: 'https://maps.google.com/?q=Bas%C3%ADlica+de+San+Vicente+Ferrer,+C%2F+de+Ciril+Amor%C3%B3s+56,+46004+Val%C3%A8ncia' },
+      { tag: 'Ceremonia', name: 'Basilica de San Vicente Ferrer', addr: 'C/ de Ciril Amorós, 56, LEixample, 46004 València', time: '12:00H', mapsUrl: 'https://maps.google.com/?q=Bas%C3%ADlica+de+San+Vicente+Ferrer,+C%2F+de+Ciril+Amor%C3%B3s+56,+46004+Val%C3%A8ncia', parkings: [
+        { name: 'Aparcamiento Mercado de Colón', addr: 'Carrer del Comte de Salvatierra, 24, Ensanche, 46004 València, Valencia', mapsUrl: 'https://maps.google.com/?q=Aparcamiento+Mercado+de+Col%C3%B3n%2C+Carrer+del+Comte+de+Salvatierra%2C+24%2C+Ensanche%2C+46004+Val%C3%A8ncia%2C+Valencia' },
+        { name: 'Parking AZA Ruzafa', addr: 'C/ de Russafa, 16, Ensanche, 46004 València, Valencia', mapsUrl: 'https://maps.google.com/?q=Parking+AZA+Ruzafa%2C+C%2F+de+Russafa%2C+16%2C+Ensanche%2C+46004+Val%C3%A8ncia%2C+Valencia' },
+      ] },
       { tag: 'Celebración', name: 'La Finca del Canónigo', addr: 'Plaza del Canónigo, nº2, Poblados del Oeste, 46035 València', time: '15:30H', mapsUrl: 'https://maps.google.com/?q=La+Finca+del+Can%C3%B3nigo,+Plaza+del+Can%C3%B3nigo+2,+46035+Val%C3%A8ncia' },
     ],
+    parkingToggleLabel: 'Ver parkings cercanos',
     timelineLabel: '17 de Octubre de 2026',
     timelineTitle: ['Cronología', 'del día'],
     timeline: [
@@ -131,12 +155,22 @@ export const WEDDING: Record<Lang, Translation> = {
     stayLabel: 'Dónde dormir',
     stayTitle: 'Alojamiento',
     stays: [
-      { name: 'Casa Roma Hostel Boutique & Restaurant', note: 'Habitación doble con 15% de descuento con el código BODA.' },
-      { name: 'H10 Imperial Tarraco', note: 'Tarifa especial del 10% sobre web con el código SMART. Desayuno incluido.' },
+      { group: 'Cerca de la finca', name: 'Ilunion Valencia 3', stars: 3, note: 'A pocos minutos de La Finca del Canónigo.', url: 'https://www.booking.com/hotel/es/Ilunion-valencia-3.es.html?aid=304142&label=gen173nr-10CAEoggI46AdIM1gEaEaIAQGYATO4AQfIAQ3YAQPoAQH4AQGIAgGoAgG4AtW6ntMGwAIB0gIkMWY2NDk5YTMtNjhiNS00MDZiLTg3YzUtOTYwYTNlYmY5Zjcw2AIB4AIB&sid=e869978451856335647c277ee2b0b76b&all_sr_blocks=9281810_0_2_0_0&checkin=2026-10-17&checkout=2026-10-18&dest_id=-406131&dest_type=city&dist=0&group_adults=2&group_children=0&hapos=9&highlighted_blocks=9281810_0_2_0_0&hpos=9&matching_block_id=9281810_0_2_0_0&no_rooms=1&req_adults=2&req_children=0&room1=A%2CA&sb_price_type=total&sr_order=popularity&sr_pri_blocks=9281810_0_2_0_0__12438&srepoch=1785175557&srpvid=f3f27f2d1d0f0fd1&type=total&ucfs=1&' },
+      { group: 'Cerca de la finca', name: 'NH Valencia Center', stars: 4, note: 'A pocos minutos de La Finca del Canónigo.', url: 'https://www.booking.com/hotel/es/nhcenter.es.html?label=gen173nr-10CAEoggI46AdIM1gEaEaIAQGYATO4AQfIAQ3YAQPoAQH4AQGIAgGoAgG4AtW6ntMGwAIB0gIkMWY2NDk5YTMtNjhiNS00MDZiLTg3YzUtOTYwYTNlYmY5Zjcw2AIB4AIB&aid=304142&ucfs=1&checkin=2026-10-17&checkout=2026-10-18&dest_id=-406131&dest_type=city&group_adults=2&no_rooms=1&group_children=0&srpvid=f3f27f2d1d0f0fd1&srepoch=1785176045&matching_block_id=9072702_0_2_0_0&atlas_src=sr_iw_title' },
+      { group: 'Cerca de la iglesia', name: 'Hotel Dimar', stars: 4, note: 'A pocos minutos de la Basílica de San Vicente Ferrer.', url: 'https://www.booking.com/hotel/es/dimar.es.html?label=gen173nr-10CAEoggI46AdIM1gEaEaIAQGYATO4AQfIAQ3YAQPoAQH4AQGIAgGoAgG4AtW6ntMGwAIB0gIkMWY2NDk5YTMtNjhiNS00MDZiLTg3YzUtOTYwYTNlYmY5Zjcw2AIB4AIB&aid=304142&ucfs=1&checkin=2026-10-17&checkout=2026-10-18&dest_id=-406131&dest_type=city&group_adults=2&no_rooms=1&group_children=0&srpvid=f3f27f2d1d0f0fd1&srepoch=1785176235&matching_block_id=9088610_91462763_0_2_0&atlas_src=sr_iw_title' },
+      { group: 'Cerca de la iglesia', name: 'SH Hotel Colón Valencia', stars: 4, note: 'A pocos minutos de la Basílica de San Vicente Ferrer.', url: 'https://www.booking.com/hotel/es/ac-colon-valencia-by-marriott.es.html?label=gen173nr-10CAEoggI46AdIM1gEaEaIAQGYATO4AQfIAQ3YAQPoAQH4AQGIAgGoAgG4AtW6ntMGwAIB0gIkMWY2NDk5YTMtNjhiNS00MDZiLTg3YzUtOTYwYTNlYmY5Zjcw2AIB4AIB&aid=304142&ucfs=1&checkin=2026-10-17&checkout=2026-10-18&dest_id=-406131&dest_type=city&group_adults=2&no_rooms=1&group_children=0&nflt=oos%3D1%3Bprice%3DEUR-min-170-1%3Bht_id%3D204&srpvid=df9a93608d8d0037&srepoch=1785704436&matching_block_id=111715008_93775422_0_2_0&atlas_src=sr_iw_title' },
     ],
+    stayBookLabel: 'Ver en Booking',
     restLabel: 'Para comer',
     restTitle: ['Restaurantes', 'recomendados'],
-    rest: ['AQ Restaurant', 'Casa Balcells', 'Casa Roma', 'El Pòsit del Serrallo'],
+    rest: [
+      { name: 'Bajoqueta Bar', addr: 'Bajoqueta Bar | Tapas Valencia, Av. de les Corts Valencianes, 15, Campanar, 46015 València, Valencia', mapsUrl: 'https://maps.google.com/?q=Bajoqueta+Bar+%7C+Tapas+Valencia%2C+Av.+de+les+Corts+Valencianes%2C+15%2C+Campanar%2C+46015+Val%C3%A8ncia%2C+Valencia', webUrl: 'https://bajoquetabar.com' },
+      { name: 'Arco', addr: 'Restaurante Arco, C/ dels Sants Just i Pastor, 128, Camins al Grau, 46022 València, Valencia', mapsUrl: 'https://maps.google.com/?q=Restaurante+Arco%2C+C%2F+dels+Sants+Just+i+Pastor%2C+128%2C+Camins+al+Grau%2C+46022+Val%C3%A8ncia%2C+Valencia', webUrl: 'https://restaurantearco.es' },
+      { name: 'Trinchera', addr: "Trinchera, C/ de Pere III el Gran, 12, L'Eixample, 46005 València, Valencia", mapsUrl: 'https://maps.google.com/?q=Trinchera%2C+C%2F+de+Pere+III+el+Gran%2C+12%2C+L%27Eixample%2C+46005+Val%C3%A8ncia%2C+Valencia' },
+      { name: 'Vaqueta Gastro Mercat', addr: 'Restaurante Vaqueta Gastro Mercat, C. de Sant Ferran, 22, Ciutat Vella, 46001 València, Valencia', mapsUrl: 'https://maps.google.com/?q=Restaurante+Vaqueta+Gastro+Mercat%2C+C.+de+Sant+Ferran%2C+22%2C+Ciutat+Vella%2C+46001+Val%C3%A8ncia%2C+Valencia', webUrl: 'https://grupogastrotrinquet.com/restaurantes/vaqueta/' },
+    ],
+    restMapsLabel: 'Cómo llegar',
+    restWebLabel: 'Ver web',
     giftLabel: 'Aportación',
     giftTitle: 'Regalos',
     giftStatement: 'Vuestra presencia es lo más importante para nosotros. Si deseáis hacernos un regalo, podéis hacerlo de la forma que os resulte más cómoda.',
@@ -164,7 +198,6 @@ export const WEDDING: Record<Lang, Translation> = {
     hero: ["We're", 'getting married'],
     lead: [
       'The big day is getting closer and we would love to share it with you.',
-      '17th of October 2026 • Valencia',
       'Welcome to our wedding!',
     ],
     names: ['Aida', 'Iker'],
@@ -176,9 +209,13 @@ export const WEDDING: Record<Lang, Translation> = {
     ceremony: 'Ceremony',
     celebration: 'Celebration',
     venues: [
-      { tag: 'Ceremony', name: 'Basilica de San Vicente Ferrer', addr: 'C/ de Ciril Amorós, 56, LEixample, 46004 València', time: '16:00H', mapsUrl: 'https://maps.google.com/?q=Bas%C3%ADlica+de+San+Vicente+Ferrer,+C%2F+de+Ciril+Amor%C3%B3s+56,+46004+Val%C3%A8ncia' },
+      { tag: 'Ceremony', name: 'Basilica de San Vicente Ferrer', addr: 'C/ de Ciril Amorós, 56, LEixample, 46004 València', time: '16:00H', mapsUrl: 'https://maps.google.com/?q=Bas%C3%ADlica+de+San+Vicente+Ferrer,+C%2F+de+Ciril+Amor%C3%B3s+56,+46004+Val%C3%A8ncia', parkings: [
+        { name: 'Aparcamiento Mercado de Colón', addr: 'Carrer del Comte de Salvatierra, 24, Ensanche, 46004 València, Valencia', mapsUrl: 'https://maps.google.com/?q=Aparcamiento+Mercado+de+Col%C3%B3n%2C+Carrer+del+Comte+de+Salvatierra%2C+24%2C+Ensanche%2C+46004+Val%C3%A8ncia%2C+Valencia' },
+        { name: 'Parking AZA Ruzafa', addr: 'C/ de Russafa, 16, Ensanche, 46004 València, Valencia', mapsUrl: 'https://maps.google.com/?q=Parking+AZA+Ruzafa%2C+C%2F+de+Russafa%2C+16%2C+Ensanche%2C+46004+Val%C3%A8ncia%2C+Valencia' },
+      ] },
       { tag: 'Celebration', name: 'La Finca del Canónigo', addr: 'Plaza del Canónigo, nº2, Poblados del Oeste, 46035 València', time: '18:30H', mapsUrl: 'https://maps.google.com/?q=La+Finca+del+Can%C3%B3nigo,+Plaza+del+Can%C3%B3nigo+2,+46035+Val%C3%A8ncia' },
     ],
+    parkingToggleLabel: 'See nearby parkings',
     timelineLabel: '23rd of July, 2026',
     timelineTitle: ['Timeline', 'of the day'],
     timeline: [
@@ -202,12 +239,22 @@ export const WEDDING: Record<Lang, Translation> = {
     stayLabel: 'Where to stay',
     stayTitle: 'Accommodation',
     stays: [
-      { name: 'Casa Roma Hostel Boutique & Restaurant', note: 'Double room with 15% off using the code BODA.' },
-      { name: 'H10 Imperial Tarraco', note: 'Special 10% off the website rate with code SMART. Breakfast included.' },
+      { group: 'Near the venue', name: 'Ilunion Valencia 3', stars: 3, note: 'A few minutes from La Finca del Canónigo.', url: 'https://www.booking.com/hotel/es/Ilunion-valencia-3.es.html?aid=304142&label=gen173nr-10CAEoggI46AdIM1gEaEaIAQGYATO4AQfIAQ3YAQPoAQH4AQGIAgGoAgG4AtW6ntMGwAIB0gIkMWY2NDk5YTMtNjhiNS00MDZiLTg3YzUtOTYwYTNlYmY5Zjcw2AIB4AIB&sid=e869978451856335647c277ee2b0b76b&all_sr_blocks=9281810_0_2_0_0&checkin=2026-10-17&checkout=2026-10-18&dest_id=-406131&dest_type=city&dist=0&group_adults=2&group_children=0&hapos=9&highlighted_blocks=9281810_0_2_0_0&hpos=9&matching_block_id=9281810_0_2_0_0&no_rooms=1&req_adults=2&req_children=0&room1=A%2CA&sb_price_type=total&sr_order=popularity&sr_pri_blocks=9281810_0_2_0_0__12438&srepoch=1785175557&srpvid=f3f27f2d1d0f0fd1&type=total&ucfs=1&' },
+      { group: 'Near the venue', name: 'NH Valencia Center', stars: 4, note: 'A few minutes from La Finca del Canónigo.', url: 'https://www.booking.com/hotel/es/nhcenter.es.html?label=gen173nr-10CAEoggI46AdIM1gEaEaIAQGYATO4AQfIAQ3YAQPoAQH4AQGIAgGoAgG4AtW6ntMGwAIB0gIkMWY2NDk5YTMtNjhiNS00MDZiLTg3YzUtOTYwYTNlYmY5Zjcw2AIB4AIB&aid=304142&ucfs=1&checkin=2026-10-17&checkout=2026-10-18&dest_id=-406131&dest_type=city&group_adults=2&no_rooms=1&group_children=0&srpvid=f3f27f2d1d0f0fd1&srepoch=1785176045&matching_block_id=9072702_0_2_0_0&atlas_src=sr_iw_title' },
+      { group: 'Near the church', name: 'Hotel Dimar', stars: 4, note: 'A few minutes from the Basílica de San Vicente Ferrer.', url: 'https://www.booking.com/hotel/es/dimar.es.html?label=gen173nr-10CAEoggI46AdIM1gEaEaIAQGYATO4AQfIAQ3YAQPoAQH4AQGIAgGoAgG4AtW6ntMGwAIB0gIkMWY2NDk5YTMtNjhiNS00MDZiLTg3YzUtOTYwYTNlYmY5Zjcw2AIB4AIB&aid=304142&ucfs=1&checkin=2026-10-17&checkout=2026-10-18&dest_id=-406131&dest_type=city&group_adults=2&no_rooms=1&group_children=0&srpvid=f3f27f2d1d0f0fd1&srepoch=1785176235&matching_block_id=9088610_91462763_0_2_0&atlas_src=sr_iw_title' },
+      { group: 'Near the church', name: 'SH Hotel Colón Valencia', stars: 4, note: 'A few minutes from the Basílica de San Vicente Ferrer.', url: 'https://www.booking.com/hotel/es/ac-colon-valencia-by-marriott.es.html?label=gen173nr-10CAEoggI46AdIM1gEaEaIAQGYATO4AQfIAQ3YAQPoAQH4AQGIAgGoAgG4AtW6ntMGwAIB0gIkMWY2NDk5YTMtNjhiNS00MDZiLTg3YzUtOTYwYTNlYmY5Zjcw2AIB4AIB&aid=304142&ucfs=1&checkin=2026-10-17&checkout=2026-10-18&dest_id=-406131&dest_type=city&group_adults=2&no_rooms=1&group_children=0&nflt=oos%3D1%3Bprice%3DEUR-min-170-1%3Bht_id%3D204&srpvid=df9a93608d8d0037&srepoch=1785704436&matching_block_id=111715008_93775422_0_2_0&atlas_src=sr_iw_title' },
     ],
+    stayBookLabel: 'View on Booking',
     restLabel: 'To eat',
     restTitle: ['Recommended', 'restaurants'],
-    rest: ['AQ Restaurant', 'Casa Balcells', 'Casa Roma', 'El Pòsit del Serrallo'],
+    rest: [
+      { name: 'Bajoqueta Bar', addr: 'Bajoqueta Bar | Tapas Valencia, Av. de les Corts Valencianes, 15, Campanar, 46015 València, Valencia', mapsUrl: 'https://maps.google.com/?q=Bajoqueta+Bar+%7C+Tapas+Valencia%2C+Av.+de+les+Corts+Valencianes%2C+15%2C+Campanar%2C+46015+Val%C3%A8ncia%2C+Valencia', webUrl: 'https://bajoquetabar.com' },
+      { name: 'Arco', addr: 'Restaurante Arco, C/ dels Sants Just i Pastor, 128, Camins al Grau, 46022 València, Valencia', mapsUrl: 'https://maps.google.com/?q=Restaurante+Arco%2C+C%2F+dels+Sants+Just+i+Pastor%2C+128%2C+Camins+al+Grau%2C+46022+Val%C3%A8ncia%2C+Valencia', webUrl: 'https://restaurantearco.es' },
+      { name: 'Trinchera', addr: "Trinchera, C/ de Pere III el Gran, 12, L'Eixample, 46005 València, Valencia", mapsUrl: 'https://maps.google.com/?q=Trinchera%2C+C%2F+de+Pere+III+el+Gran%2C+12%2C+L%27Eixample%2C+46005+Val%C3%A8ncia%2C+Valencia' },
+      { name: 'Vaqueta Gastro Mercat', addr: 'Restaurante Vaqueta Gastro Mercat, C. de Sant Ferran, 22, Ciutat Vella, 46001 València, Valencia', mapsUrl: 'https://maps.google.com/?q=Restaurante+Vaqueta+Gastro+Mercat%2C+C.+de+Sant+Ferran%2C+22%2C+Ciutat+Vella%2C+46001+Val%C3%A8ncia%2C+Valencia', webUrl: 'https://grupogastrotrinquet.com/restaurantes/vaqueta/' },
+    ],
+    restMapsLabel: 'Getting there',
+    restWebLabel: 'View website',
     giftLabel: 'Contribution',
     giftTitle: 'Gifts',
     giftStatement: 'Your presence is the most important thing to us. If you would like to give us a gift, you may do so in whatever way is most comfortable for you.',

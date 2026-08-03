@@ -437,6 +437,87 @@ hr {
   .photo-carousel-track { width: max-content; }
 }
 
+/* --- Parking accordion ---------------------------------------------------- */
+.parking-accordion {
+  border-top: var(--bw-hair) solid var(--rule);
+  border-bottom: var(--bw-hair) solid var(--rule);
+}
+
+.parking-accordion-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+  padding: var(--s-5) 0;
+  cursor: pointer;
+  list-style: none;
+  font: var(--type-label);
+  font-weight: var(--w-medium);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-meta);
+  color: var(--ink);
+}
+
+.parking-accordion-summary::-webkit-details-marker { display: none; }
+
+.parking-accordion-summary svg {
+  flex: none;
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.parking-accordion[open] > .parking-accordion-summary svg {
+  transform: rotate(180deg);
+}
+
+.parking-accordion-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+  padding: 0 0 var(--s-5);
+}
+
+.parking-accordion-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-3);
+}
+
+@media (min-width: 720px) {
+  .parking-accordion-item {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-4);
+  }
+}
+
+/* --- Restaurant rows — buttons below on mobile/tablet --------------------- */
+.rest-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-4);
+  padding: var(--s-5) 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.rest-row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-5);
+}
+
+@media (min-width: 900px) {
+  .rest-row {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-5);
+  }
+}
+
 /* --- InfoCard illustration grid — mobile-first responsive ----------------- */
 .info-card-grid {
   display: grid;

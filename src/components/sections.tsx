@@ -10,6 +10,7 @@ import {
   TimelineRow,
   InfoCard,
   PhotoFrame,
+  MetaRow,
 } from './ds';
 import type { Lang, Translation } from '@/content/wedding';
 
@@ -80,9 +81,12 @@ const CAROUSEL_PHOTOS = [
   '/photos/03.jpg',
   '/photos/04.jpg',
   '/photos/05.jpg',
+  '/photos/06.jpg',
+  '/photos/07.jpg',
+  '/photos/08.jpg',
 ];
 
-export function PhotoStrip({ bw = false }: { bw?: boolean }) {
+export function PhotoStrip() {
   const scrollerRef = React.useRef<HTMLElement | null>(null);
   const lightboxFrameRef = React.useRef<HTMLDivElement | null>(null);
   const dragRef = React.useRef({ active: false, moved: false, startX: 0, startScrollLeft: 0 });
@@ -216,7 +220,7 @@ export function PhotoStrip({ bw = false }: { bw?: boolean }) {
                 if (!dragRef.current.moved) setActiveIndex(idx % CAROUSEL_PHOTOS.length);
               }}
             >
-              <PhotoFrame src={src} alt="" ratio="3 / 4" bw={bw} draggable={false} />
+              <PhotoFrame src={src} alt="" ratio="3 / 4" draggable={false} />
             </button>
           </div>
         ))}
@@ -313,6 +317,28 @@ export function PhotoStrip({ bw = false }: { bw?: boolean }) {
 }
 
 
+function ParkingToggle({ label, mapsLabel, parkings }: { label: string; mapsLabel: string; parkings: NonNullable<Translation['venues'][number]['parkings']> }) {
+  return (
+    <details className="parking-accordion" style={{ marginTop: 'var(--s-5)' }}>
+      <summary className="parking-accordion-summary">
+        <span>{label}</span>
+        <Icon name="chevronDown" size={14} />
+      </summary>
+      <div className="parking-accordion-body">
+        {parkings.map((p, i) => (
+          <div key={i} className="parking-accordion-item">
+            <div>
+              <div style={{ font: 'var(--type-meta)', fontWeight: 'var(--w-medium)', textTransform: 'uppercase', letterSpacing: 'var(--ls-meta)', color: 'var(--ink)' }}>{p.name}</div>
+              <div style={{ marginTop: '4px', font: 'var(--type-meta)', textTransform: 'uppercase', letterSpacing: 'var(--ls-meta)', color: 'var(--ink-muted)' }}>{p.addr}</div>
+            </div>
+            <MetaRow items={[{ icon: 'pin', label: mapsLabel, href: p.mapsUrl }]} />
+          </div>
+        ))}
+      </div>
+    </details>
+  );
+}
+
 export function Detalles({ t }: { t: Translation }) {
   return (
     <section style={wrap({ paddingTop: 'var(--section-y)', paddingBottom: '50px' })}>
@@ -349,6 +375,9 @@ export function Detalles({ t }: { t: Translation }) {
                   { icon: 'pin', label: 'Como llegar', href: v.mapsUrl },
                 ]}
               />
+              {v.parkings && (
+                <ParkingToggle label={t.parkingToggleLabel} mapsLabel={t.restMapsLabel} parkings={v.parkings} />
+              )}
             </React.Fragment>
           );
         })}
@@ -426,10 +455,21 @@ export function Stay({ t }: { t: Translation }) {
       <div style={{ marginTop: 'var(--s-8)' }}>
         {t.stays.map((s, i) => (
           <React.Fragment key={i}>
+            {s.group !== t.stays[i - 1]?.group && (
+              <div style={{ marginTop: i > 0 ? 'var(--s-7)' : 0, marginBottom: 'var(--s-4)' }}>
+                <SectionLabel rule>{s.group}</SectionLabel>
+              </div>
+            )}
             <Divider />
-            <div style={{ padding: 'var(--s-6) 0' }}>
-              <h3 style={{ font: 'var(--type-h3)', fontWeight: 'var(--w-bold)', textTransform: 'uppercase', color: 'var(--ink)', letterSpacing: 'var(--ls-tight)' }}>{s.name}</h3>
-              <p style={{ marginTop: 'var(--s-3)', font: 'var(--type-meta)', textTransform: 'uppercase', letterSpacing: 'var(--ls-meta)', color: 'var(--ink-muted)', maxWidth: '56ch' }}>{s.note}</p>
+            <div style={{ padding: 'var(--s-6) 0', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--s-5)' }}>
+              <div>
+                <h3 style={{ display: 'flex', alignItems: 'baseline', gap: 'var(--s-3)', flexWrap: 'wrap', font: 'var(--type-h3)', fontWeight: 'var(--w-bold)', textTransform: 'uppercase', color: 'var(--ink)', letterSpacing: 'var(--ls-tight)' }}>
+                  {s.name}
+                  <span aria-label={`${s.stars} estrellas`} style={{ color: 'var(--clay)', fontSize: '0.55em', letterSpacing: 0 }}>{'★'.repeat(s.stars)}</span>
+                </h3>
+                <p style={{ marginTop: 'var(--s-3)', font: 'var(--type-meta)', textTransform: 'uppercase', letterSpacing: 'var(--ls-meta)', color: 'var(--ink-muted)', maxWidth: '56ch' }}>{s.note}</p>
+              </div>
+              <Button variant="outline" href={s.url} target="_blank" rel="noopener noreferrer">{t.stayBookLabel}</Button>
             </div>
           </React.Fragment>
         ))}
@@ -449,9 +489,17 @@ export function Restaurants({ t }: { t: Translation }) {
       </div>
       <div style={{ marginTop: 'var(--s-8)', borderTop: '1px solid var(--rule)' }}>
         {t.rest.map((r, i) => (
-          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 'var(--s-5)', padding: 'var(--s-5) 0', borderBottom: '1px solid var(--rule)' }}>
-            <Icon name="utensils" size={18} color="var(--clay)" />
-            <span style={{ font: 'var(--type-h3)', fontWeight: 'var(--w-bold)', textTransform: 'uppercase', color: 'var(--ink)', letterSpacing: 'var(--ls-tight)' }}>{r}</span>
+          <div key={i} className="rest-row">
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--s-5)' }}>
+              <Icon name="utensils" size={18} color="var(--clay)" />
+              <span style={{ font: 'var(--type-h3)', fontWeight: 'var(--w-bold)', textTransform: 'uppercase', color: 'var(--ink)', letterSpacing: 'var(--ls-tight)' }}>{r.name}</span>
+            </div>
+            <div className="rest-row-actions">
+              <MetaRow items={[{ icon: 'pin', label: t.restMapsLabel, href: r.mapsUrl }]} />
+              {r.webUrl && (
+                <Button variant="outline" href={r.webUrl} target="_blank" rel="noopener noreferrer">{t.restWebLabel}</Button>
+              )}
+            </div>
           </div>
         ))}
       </div>
@@ -630,7 +678,7 @@ export function Rsvp({ t }: { t: Translation }) {
 export function Footer({ t }: { t: Translation }) {
   return (
     <footer>
-      <PhotoStrip bw />
+      <PhotoStrip />
       <div style={wrap({ paddingTop: 'var(--s-8)', paddingBottom: 'var(--s-9)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--s-5)' })}>
         <span style={{ font: 'var(--type-label)', letterSpacing: 'var(--ls-label)', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>{t.footer}</span>
         <span style={{ font: 'var(--type-label)', letterSpacing: 'var(--ls-label)', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>València · 17.10.26</span>
