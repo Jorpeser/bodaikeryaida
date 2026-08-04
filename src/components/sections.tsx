@@ -26,7 +26,7 @@ function wrap(extra?: React.CSSProperties): React.CSSProperties {
 /* ---------------- Header ---------------- */
 export function Header({ t, lang, setLang }: { t: Translation; lang: Lang; setLang: (l: Lang) => void }) {
   return (
-    <header style={wrap({ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 'var(--s-7)' })}>
+    <header style={wrap({ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '20px' })}>
       <div style={{ display: 'flex', alignItems: 'center', height: '36px' }}>
         <span style={{ display: 'block', font: 'var(--type-label)', lineHeight: 1, letterSpacing: 'var(--ls-label)', textTransform: 'uppercase', color: 'var(--ink-muted)', transform: 'translateY(8px)' }}>{t.place}</span>
       </div>
@@ -373,7 +373,7 @@ export function Detalles({ t }: { t: Translation }) {
 export function Timeline({ t }: { t: Translation }) {
   return (
     <section style={wrap({ paddingTop: 'var(--section-y)', paddingBottom: 0 })}>
-      <SectionLabel index="02">{t.timelineLabel}</SectionLabel>
+      <SectionLabel>{t.timelineLabel}</SectionLabel>
       <div style={{ marginTop: 'var(--s-6)' }}>
         <SectionHeading>{t.timelineTitle[0]}<br />{t.timelineTitle[1]}</SectionHeading>
       </div>
@@ -388,7 +388,7 @@ export function Timeline({ t }: { t: Translation }) {
 export function DressCode({ t }: { t: Translation }) {
   return (
     <section style={wrap({ paddingTop: 'var(--section-y)', paddingBottom: 0 })}>
-      <SectionLabel index="03">{t.dressLabel}</SectionLabel>
+      <SectionLabel>{t.dressLabel}</SectionLabel>
       <div style={{ marginTop: 'var(--s-6)' }}>
         <SectionHeading>{t.dressTitle[0]}<br />{t.dressTitle[1]}</SectionHeading>
       </div>
@@ -431,7 +431,7 @@ export function DressCode({ t }: { t: Translation }) {
 export function Stay({ t }: { t: Translation }) {
   return (
     <section style={wrap({ paddingTop: 'var(--section-y)', paddingBottom: 0 })}>
-      <SectionLabel index="05">{t.stayLabel}</SectionLabel>
+      <SectionLabel >{t.stayLabel}</SectionLabel>
       <div style={{ marginTop: 'var(--s-6)' }}>
         <SectionHeading>{t.stayTitle}</SectionHeading>
       </div>
@@ -456,7 +456,6 @@ export function Stay({ t }: { t: Translation }) {
             </div>
           </React.Fragment>
         ))}
-        <Divider />
       </div>
     </section>
   );
@@ -466,7 +465,7 @@ export function Stay({ t }: { t: Translation }) {
 export function Restaurants({ t }: { t: Translation }) {
   return (
     <section style={wrap({ paddingTop: 'var(--section-y)', paddingBottom: 0 })}>
-      <SectionLabel index="06">{t.restLabel}</SectionLabel>
+      <SectionLabel >{t.restLabel}</SectionLabel>
       <div style={{ marginTop: 'var(--s-6)' }}>
         <SectionHeading>{t.restTitle[0]}<br />{t.restTitle[1]}</SectionHeading>
       </div>
@@ -495,7 +494,7 @@ export function Regalos({ t }: { t: Translation }) {
   const [open, setOpen] = React.useState(false);
   return (
     <section style={wrap({ paddingTop: 'var(--section-y)', paddingBottom: 0 })}>
-      <SectionLabel index="07">{t.giftLabel}</SectionLabel>
+      <SectionLabel>{t.giftLabel}</SectionLabel>
       <div style={{ marginTop: 'var(--s-6)' }}>
         <SectionHeading>{t.giftTitle}</SectionHeading>
       </div>
@@ -589,7 +588,7 @@ export function Rsvp({ t }: { t: Translation }) {
 
   return (
     <section id="rsvp" style={wrap({ paddingTop: 'var(--section-y)', paddingBottom: 'var(--s-9)' })}>
-      <SectionLabel index="08">{t.rsvpLabel}</SectionLabel>
+      <SectionLabel>{t.rsvpLabel}</SectionLabel>
       <div style={{ marginTop: 'var(--s-6)' }}>
         <SectionHeading>{t.rsvpTitle}</SectionHeading>
       </div>
@@ -661,7 +660,7 @@ export function Footer({ t }: { t: Translation }) {
   return (
     <footer>
       <PhotoStrip />
-      <div style={wrap({ paddingTop: 'var(--s-8)', paddingBottom: 'var(--s-9)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--s-5)' })}>
+      <div style={wrap({ paddingTop: 'var(--s-8)', paddingBottom: '50px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--s-5)' })}>
         <span style={{ font: 'var(--type-label)', letterSpacing: 'var(--ls-label)', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>{t.footer}</span>
         <span style={{ font: 'var(--type-label)', letterSpacing: 'var(--ls-label)', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>València · 17.10.26</span>
       </div>
