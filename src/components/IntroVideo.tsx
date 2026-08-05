@@ -7,6 +7,14 @@ export default function IntroVideo({ label, onStart, onDone }: { label: string; 
   const [playing, setPlaying] = React.useState(false);
   const [closing, setClosing] = React.useState(false);
 
+  React.useEffect(() => {
+    const { overflow } = document.body.style;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = overflow;
+    };
+  }, []);
+
   const start = () => {
     if (playing) return;
     setPlaying(true);
@@ -56,9 +64,10 @@ export default function IntroVideo({ label, onStart, onDone }: { label: string; 
           className="rsvp-cta-bounce"
           style={{
             position: 'absolute',
-            left: '50%',
+            left: 0,
+            right: 0,
             bottom: '14%',
-            transform: 'translateX(-50%)',
+            textAlign: 'center',
             font: 'var(--type-lead)',
             fontWeight: 'var(--w-medium)',
             textTransform: 'uppercase',
