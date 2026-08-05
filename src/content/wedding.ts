@@ -59,6 +59,7 @@ export interface RsvpFields {
 export interface Translation {
   place: string;
   invite: string;
+  introLabel: string;
   hero: [string, string];
   lead: [string, string];
   names: [string, string];
@@ -111,6 +112,7 @@ export const WEDDING: Record<Lang, Translation> = {
   es: {
     place: 'Valencia · 2026',
     invite: 'Invitación',
+    introLabel: 'Toca la invitación',
     hero: ['Nos', 'casamos'],
     lead: [
       'El gran día está cada vez más cerca y nos encantaría compartirlo con vosotros.',
@@ -195,6 +197,7 @@ export const WEDDING: Record<Lang, Translation> = {
   en: {
     place: 'Valencia · 2026',
     invite: 'Invitation',
+    introLabel: 'Tap the invitation',
     hero: ["We're", 'getting married'],
     lead: [
       'The big day is getting closer and we would love to share it with you.',

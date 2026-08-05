@@ -2,6 +2,8 @@
 
 import React from 'react';
 import { WEDDING, WEDDING_DATE, type Lang } from '@/content/wedding';
+import MusicPlayer from './MusicPlayer';
+import IntroVideo from './IntroVideo';
 import {
   Header,
   Hero,
@@ -30,6 +32,8 @@ function diffParts(target: Date): [number, number, number, number] {
 
 export default function WeddingSite() {
   const [lang, setLang] = React.useState<Lang>('es');
+  const [introDone, setIntroDone] = React.useState(false);
+  const [musicEnabled, setMusicEnabled] = React.useState(false);
   // Start at zeros so SSR and the first client render agree, then tick on mount.
   const [parts, setParts] = React.useState<[number, number, number, number]>([0, 0, 0, 0]);
 
@@ -43,6 +47,14 @@ export default function WeddingSite() {
 
   return (
     <>
+      {!introDone && (
+        <IntroVideo
+          label={t.introLabel}
+          onStart={() => setMusicEnabled(true)}
+          onDone={() => setIntroDone(true)}
+        />
+      )}
+      {musicEnabled && <MusicPlayer />}
       <Header t={t} lang={lang} setLang={setLang} />
       <Hero t={t} />
       <Names t={t} parts={parts} />
